@@ -1,0 +1,201 @@
+package CUP;
+
+import java_cup.runtime.Symbol;
+
+parser code {:
+    @Override
+    public void syntax_error(Symbol s) {
+        System.err.println("Error sintáctico en línea " + (s.left) + ", columna " + (s.right));
+        System.err.println("Error después del token: " + sym.terminalNames[s.sym - 1]);
+    }
+
+    @Override
+    public void report_error(String message, Object info) {
+        Symbol sym = (Symbol) info;
+        System.err.println("Error: " + message + " en línea " + (sym.left) + ", columna " + (sym.right));
+    }
+
+    @Override
+    public void unrecovered_syntax_error(Symbol s) throws Exception {
+        throw new RuntimeException("Error sintáctico crítico.");
+    }
+:};
+
+// Declaración de tokens
+terminal INTEGER, FLOAT, BOOL, CHAR, STRING, INT_LITERAL, FLOAT_LITERAL, CHAR_LITERAL, STRING_LITERAL;
+terminal TRUE, FALSE;
+terminal OPEN_BLOCK, CLOSE_BLOCK, OPEN_BRACKET, CLOSE_BRACKET, OPEN_PAREN, CLOSE_PAREN;
+terminal ASSIGN, END_STATEMENT;
+terminal PLUS, MINUS, MULTIPLY, DIVIDE, MODULO, POWER;
+terminal INCREMENT, DECREMENT;
+terminal LESS_THAN, LESS_EQUAL, GREATER_THAN, GREATER_EQUAL, EQUAL, NOT_EQUAL;
+terminal AND, OR, NOT;
+terminal IF, ELSE, WHILE, FOR, SWITCH, CASE, DEFAULT;
+terminal IDENTIFIER, MAIN, PRINT, READ, COLON, COMMA;
+terminal BOOL_LITERAL, RETURN, BREAK;
+
+// Declaración de no terminales
+non terminal program, expression, funciones, funcion, encabezadoFunc, main;
+non terminal parametros, paramAux, parametro, bloque, tipos, sentencias, sentencia;
+non terminal creacion, creacionAsign, asignacion, literales, arreglo, accesoArreglo, returnStatement, breakStatement;
+non terminal asignacionArreglo, llamadaFuncion, argumentos, estructuraControl;
+non terminal ifElse, while, for, switch, casos, caso, io, operadorAritmetico, operadorRelacional;
+non terminal operadorLogico, operadorUnario, termino, booleano;
+non terminal expressionLogica, expressionRelacional, expressionAritmetica, expressionUnaria;
+non terminal asignacionFor, llamadaFuncionCompleta, expressionCompleta;
+non terminal creacionAsignArreglo;
+
+// Precedencia y asociatividad
+precedence left OR;
+precedence left AND;
+precedence left EQUAL, NOT_EQUAL;
+precedence left LESS_THAN, LESS_EQUAL, GREATER_THAN, GREATER_EQUAL;
+precedence left PLUS, MINUS;
+precedence left MULTIPLY, DIVIDE, MODULO;
+precedence left POWER;
+precedence right NOT;
+precedence nonassoc END_STATEMENT;
+
+// Símbolo inicial
+start with program;
+
+// Reglas de producción
+program ::= main funciones
+          | funciones main
+          | funciones
+          | main
+          | error END_STATEMENT {:
+                System.err.println("Recuperación: Se ignoró el error hasta ';'");
+          :};
+
+funciones ::= funcion
+           | funciones funcion;
+
+funcion ::= encabezadoFunc bloque;
+
+encabezadoFunc ::= tipos IDENTIFIER parametros;
+
+main ::= MAIN OPEN_PAREN CLOSE_PAREN bloque;
+
+parametros ::= OPEN_PAREN CLOSE_PAREN
+             | OPEN_PAREN paramAux CLOSE_PAREN;
+
+paramAux ::= parametro
+           | paramAux COMMA parametro;
+
+parametro ::= tipos IDENTIFIER;
+
+bloque ::= OPEN_BLOCK  sentencias CLOSE_BLOCK
+        | OPEN_BLOCK argumentos CLOSE_BLOCK;
+
+tipos ::= INTEGER
+       | FLOAT
+       | BOOL
+       | CHAR
+       | STRING;
+
+sentencias ::= sentencia
+             | sentencias sentencia;
+
+sentencia ::= creacion
+            | creacionAsign
+            | asignacion
+            | estructuraControl
+            | io
+            | creacionAsignArreglo
+            | asignacionArreglo
+            | returnStatement
+            | breakStatement
+            | llamadaFuncionCompleta;
+
+creacion ::= tipos IDENTIFIER END_STATEMENT;
+
+creacionAsign ::= tipos IDENTIFIER ASSIGN expression END_STATEMENT;
+
+asignacion ::= IDENTIFIER ASSIGN expression END_STATEMENT;
+
+asignacionFor ::= IDENTIFIER ASSIGN expression;
+
+literales ::= INT_LITERAL
+            | FLOAT_LITERAL
+            | booleano
+            | STRING_LITERAL
+            | CHAR_LITERAL;
+
+creacionAsignArreglo ::= tipos IDENTIFIER OPEN_BRACKET expression CLOSE_BRACKET END_STATEMENT
+          | tipos IDENTIFIER OPEN_BRACKET expression CLOSE_BRACKET ASSIGN bloque END_STATEMENT;
+
+accesoArreglo ::= IDENTIFIER OPEN_BRACKET expression CLOSE_BRACKET;
+
+asignacionArreglo ::= accesoArreglo ASSIGN expression END_STATEMENT
+                    | IDENTIFIER OPEN_BRACKET CLOSE_BRACKET ASSIGN bloque END_STATEMENT;
+
+returnStatement ::= RETURN expression END_STATEMENT
+                 | RETURN END_STATEMENT;
+
+breakStatement ::= BREAK END_STATEMENT;
+
+llamadaFuncion ::= IDENTIFIER OPEN_PAREN argumentos CLOSE_PAREN
+                 | IDENTIFIER OPEN_PAREN CLOSE_PAREN;
+
+llamadaFuncionCompleta ::= llamadaFuncion END_STATEMENT;
+
+argumentos ::= expression
+             | argumentos COMMA expression;
+
+estructuraControl ::= ifElse
+                    | while
+                    | for
+                    | switch;
+
+ifElse ::= IF OPEN_PAREN expression CLOSE_PAREN bloque ELSE bloque
+         | IF OPEN_PAREN expression CLOSE_PAREN bloque;
+
+while ::= WHILE OPEN_PAREN expression CLOSE_PAREN bloque;
+
+for ::= FOR OPEN_PAREN asignacionFor COMMA expression COMMA expression CLOSE_PAREN bloque;
+
+switch ::= SWITCH OPEN_PAREN expression CLOSE_PAREN OPEN_BLOCK casos CLOSE_BLOCK;
+
+casos ::= caso
+        | casos caso;
+
+caso ::= CASE expression COLON sentencias
+       | CASE expression COLON expressionCompleta
+       | DEFAULT COLON expressionCompleta
+       | DEFAULT COLON sentencias;
+
+io ::= PRINT OPEN_PAREN expression CLOSE_PAREN END_STATEMENT
+    | READ OPEN_PAREN IDENTIFIER CLOSE_PAREN END_STATEMENT;
+
+booleano ::= BOOL_LITERAL | TRUE | FALSE;
+
+expression ::= expression operadorLogico expression
+             | expression operadorRelacional expression
+             | expressionAritmetica;
+
+expressionCompleta ::= expression END_STATEMENT;
+
+expressionLogica ::= expressionLogica operadorLogico expressionRelacional
+                   | expressionRelacional;
+
+expressionRelacional ::= expressionRelacional operadorRelacional expressionAritmetica
+                       | expressionAritmetica;
+
+expressionAritmetica ::= expressionAritmetica operadorAritmetico expressionUnaria
+                       | expressionUnaria;
+
+expressionUnaria ::= operadorUnario termino
+                   | termino operadorUnario
+                   | termino;
+
+termino ::= IDENTIFIER
+          | literales
+          | llamadaFuncion
+          | accesoArreglo
+          | OPEN_PAREN expression CLOSE_PAREN;
+
+operadorAritmetico ::= PLUS | MINUS | DIVIDE | MULTIPLY | MODULO | POWER;
+operadorRelacional ::= LESS_THAN | LESS_EQUAL | GREATER_THAN | GREATER_EQUAL | EQUAL | NOT_EQUAL;
+operadorLogico ::= AND | OR | NOT;
+operadorUnario ::= INCREMENT | DECREMENT;
