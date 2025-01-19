@@ -7,7 +7,7 @@ _/
 esto es un comentario inicial
 _/
 
-bromista _func1_ abreregalo cupido _x22_ , cupido _x22_ cierraregalo
+bromista _func1_ abreregalo cupido _x22_ cierraregalo
 abrecuento
     cupido _miChar_ entrega '!' finregalo
     cometa _str1_ entrega "Hola $%&/gaspar$& cierraregalo mundo" finregalo

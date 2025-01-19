@@ -1,8 +1,16 @@
 package CUP;
 
 import java_cup.runtime.Symbol;
+import java.util.HashMap;
+import java.util.Map;
+import Clases.*;
+
+// Modificaciones en producciones
 
 parser code {:
+
+    TablaSimbolos tablaSimbolos = new TablaSimbolos();
+
     @Override
     public void syntax_error(Symbol s) {
         System.err.println("Error sintáctico en línea " + (s.left) + ", columna " + (s.right));
@@ -19,6 +27,7 @@ parser code {:
     public void unrecovered_syntax_error(Symbol s) throws Exception {
         throw new RuntimeException("Error sintáctico crítico.");
     }
+
 :};
 
 // Declaración de tokens
@@ -35,15 +44,19 @@ terminal IDENTIFIER, MAIN, PRINT, READ, COLON, COMMA;
 terminal BOOL_LITERAL, RETURN, BREAK;
 
 // Declaración de no terminales
-non terminal program, expression, funciones, funcion, encabezadoFunc, main;
-non terminal parametros, paramAux, parametro, bloque, tipos, sentencias, sentencia;
-non terminal creacion, creacionAsign, asignacion, literales, arreglo, accesoArreglo, returnStatement, breakStatement;
+non terminal program, expression, funciones, encabezadoFunc, main;
+non terminal paramAux, parametro, sentencias, sentencia;
+non terminal creacion, asignacion, literales, arreglo, accesoArreglo, returnStatement, breakStatement;
 non terminal asignacionArreglo, llamadaFuncion, argumentos, estructuraControl;
 non terminal ifElse, while, for, switch, casos, caso, io, operadorAritmetico, operadorRelacional;
 non terminal operadorLogico, operadorUnario, termino, booleano;
 non terminal expressionLogica, expressionRelacional, expressionAritmetica, expressionUnaria;
 non terminal asignacionFor, llamadaFuncionCompleta, expressionCompleta;
 non terminal creacionAsignArreglo;
+
+non terminal String funcion, parametros, bloque;
+non terminal TipoDatos tipos;
+non terminal Object creacionAsign;
 
 // Precedencia y asociatividad
 precedence left OR;
@@ -88,11 +101,11 @@ parametro ::= tipos IDENTIFIER;
 bloque ::= OPEN_BLOCK  sentencias CLOSE_BLOCK
         | OPEN_BLOCK argumentos CLOSE_BLOCK;
 
-tipos ::= INTEGER
-       | FLOAT
-       | BOOL
-       | CHAR
-       | STRING;
+tipos ::= INTEGER: tipo_int {::}
+       | FLOAT: tipo_float {::}
+       | BOOL: tipo_bool {::}
+       | CHAR: tipo_char {::}
+       | STRING: tipo_string {::};
 
 sentencias ::= sentencia
              | sentencias sentencia;
@@ -108,9 +121,16 @@ sentencia ::= creacion
             | breakStatement
             | llamadaFuncionCompleta;
 
-creacion ::= tipos IDENTIFIER END_STATEMENT;
+creacion ::= tipos:a IDENTIFIER:b END_STATEMENT:c {:
+    tablaSimbolos.declarar(b.toString(), a);
+:};
 
-creacionAsign ::= tipos IDENTIFIER ASSIGN expression END_STATEMENT;
+creacionAsign ::= tipos:a IDENTIFIER:b ASSIGN:c expression:d END_STATEMENT:e {:
+    tablaSimbolos.declarar(b.toString(), a);
+    if (!a.esCompatible((TipoDatos) d)) {
+        throw new RuntimeException("Error semántico: Asignación incompatible en variable '" + b + "'");
+    }
+:};
 
 asignacion ::= IDENTIFIER ASSIGN expression END_STATEMENT;
 
