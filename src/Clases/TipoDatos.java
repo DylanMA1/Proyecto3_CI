@@ -1,10 +1,9 @@
 package Clases;
 
 public enum TipoDatos {
-    INTEGER, FLOAT, BOOL, CHAR, STRING;
+    INTEGER, FLOAT, BOOL, CHAR, STRING, IDENTIFIER, UNDEFINED;
 
     public boolean esCompatible(TipoDatos otro) {
-        // Lógica de compatibilidad de tipos básica
         return this == otro;
     }
 }

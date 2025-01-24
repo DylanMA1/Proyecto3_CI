@@ -1,5 +1,7 @@
 import CUP.Parser;
 import Clases.TablaSimbolos;
+import Clases.TipoDatos;
+import Clases.Simbolo;
 import java_cup.runtime.Symbol;
 import java.io.*;
 import java.nio.file.Files;
@@ -11,9 +13,6 @@ import CUP.sym;
 import jflex.exceptions.SilentExit;
 
 public class Main {
-
-    // Tabla de símbolos
-    private static final TablaSimbolos tablaSimbolos = new TablaSimbolos();
 
     public static void main(String[] args) throws SilentExit {
         InputStream originalIn = System.in;
@@ -59,6 +58,8 @@ public class Main {
             Lexer lexer = new Lexer(reader);
             Symbol token;
 
+            Parser parser = new Parser(lexer);
+
             while (true) {
                 token = lexer.next_token();
                 if (token.sym != 0) {
@@ -66,20 +67,18 @@ public class Main {
                     int linea = lexer.getLine() + 1;
                     int columna = lexer.getColumn() + 1;
 
-                    String tipo = getTokenType(token.sym);
+                    TipoDatos tipo = getTokenType(token.sym);
 
                     System.out.println("Token: " + tokenName + ", Tipo: " + tipo + ", Línea: " + linea + ", Columna: " + columna);
-
-                    // Agregar token a la tabla de símbolos
-                    tablaSimbolos.addToSymbolTable(token, tokenName, tipo, linea, columna);
 
                 } else {
                     break;
                 }
             }
 
-            for (TablaSimbolos.SymbolTableEntry entry : tablaSimbolos.getEntries()) {
-                simbolosWriter.write(entry.toString());
+            // Escribir la tabla de símbolos en el archivo de salida
+            for (Simbolo simbolo : parser.tablaSimbolos.getEntries()) {
+                simbolosWriter.write(simbolo.toString());
                 simbolosWriter.newLine();
             }
 
@@ -92,36 +91,48 @@ public class Main {
         }
     }
 
+    /*private static void validateSyntax(String filePath) {
+        try (FileReader reader = new FileReader(filePath)) {
+            Lexer lexer = new Lexer(reader);
+            lexer.desactivarImpresionErrores();
+            Parser parser = new Parser(lexer);
+            parser.parse();
+            parser.tablaSimbolos.imprimirTabla();
+            System.out.println("Análisis completado.");
+        } catch (Exception e) {
+            System.err.println("Error durante el análisis: " + e.getMessage());
+        }
+    }*/
+
     private static void validateSyntax(String filePath) {
         try (FileReader reader = new FileReader(filePath)) {
             Lexer lexer = new Lexer(reader);
             lexer.desactivarImpresionErrores();
             Parser parser = new Parser(lexer);
             parser.parse();
+            parser.tablaSimbolos.imprimirTabla(); // Esto ahora escribe en el archivo
             System.out.println("Análisis completado.");
         } catch (Exception e) {
             System.err.println("Error durante el análisis: " + e.getMessage());
         }
     }
 
-    private static String getTokenType(int sym) {
+    private static TipoDatos getTokenType(int sym) {
         switch (sym) {
             case CUP.sym.INTEGER:
-                return "int";
+                return TipoDatos.INTEGER;
             case CUP.sym.FLOAT:
-                return "float";
+                return TipoDatos.FLOAT;
             case CUP.sym.BOOL:
-                return "bool";
+                return TipoDatos.BOOL;
             case CUP.sym.CHAR:
-                return "char";
+                return TipoDatos.CHAR;
             case CUP.sym.STRING:
-                return "string";
+                return TipoDatos.STRING;
             case CUP.sym.IDENTIFIER:
-                return "variable/función";
-            case CUP.sym.MAIN:
-                return "main";
+                return TipoDatos.IDENTIFIER;
             default:
-                return "Sin tipo";
+                return TipoDatos.UNDEFINED;
         }
     }
 

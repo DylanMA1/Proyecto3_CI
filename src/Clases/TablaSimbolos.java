@@ -1,92 +1,194 @@
 package Clases;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
-
 import java_cup.runtime.Symbol;
 
 /**
  * Clase que representa la tabla de símbolos utilizada durante el análisis léxico y sintáctico.
  */
+@SuppressWarnings("LanguageDetectionInspection")
 public class TablaSimbolos {
 
-    private final List<SymbolTableEntry> symbolTable;
-
-    private final Map<String, TipoDatos> tiposDato = new HashMap<>();
+    private ArrayList<Simbolo> tablaSimbolos;
 
     public TablaSimbolos() {
-        symbolTable = new ArrayList<>();
+        tablaSimbolos = new ArrayList<>();
     }
 
     /**
      * Agrega un token a la tabla de símbolos.
      *
-     * @param token     El token identificado.
+     * @param type     El token identificado.
      * @param tokenName El nombre del token.
-     * @param tipo      El tipo asociado (si es aplicable, ej. variables o funciones).
+     * @param valor      El tipo asociado (si es aplicable, ej. variables o funciones).
      * @param linea     La línea donde se encuentra el token.
      * @param columna   La columna donde se encuentra el token.
      */
-    public void addToSymbolTable(Symbol token, String tokenName, String tipo, int linea, int columna) {
-        SymbolTableEntry entry = new SymbolTableEntry(tokenName, token.value, tipo, linea, columna);
-        symbolTable.add(entry);
+    /*public void addToSymbolTable(String type, String tokenName, Symbol valor, int linea, int columna) {
+        String valorString = valor.value != null ? valor.value.toString() : "null";
+
+        Simbolo simbolo = new Simbolo(type, tokenName, valorString, linea, columna);
+        if (!exists(tokenName)) {
+            tablaSimbolos.add(simbolo);
+        } else {
+            throw new RuntimeException("Error semántico: El símbolo '" + tokenName + "' ya existe en la tabla.");
+        }
+    }*/
+
+    /*public void addToSymbolTable(String type, String tokenName, Symbol valor, int linea, int columna) {
+        String valorString = (valor != null && valor.value != null) ? valor.value.toString() : "null";
+
+        Simbolo simbolo = new Simbolo(type, tokenName, valorString, linea, columna);
+
+        // Validar duplicados
+        if (!exists(tokenName)) {
+            tablaSimbolos.add(simbolo);
+        } else if (type.equals("FUNCTION")) {
+            throw new RuntimeException("Error semántico: La función '" + tokenName + "' ya existe en la tabla.");
+        } else {
+            throw new RuntimeException("Error semántico: El símbolo '" + tokenName + "' ya existe en la tabla.");
+        }
+    }*/
+
+    public void addToSymbolTable(String type, String tokenName, Symbol valor, int linea, int columna) {
+        String valorString = (valor != null && valor.value != null) ? valor.value.toString() : "null";
+
+        Simbolo simbolo = new Simbolo(type, tokenName, valorString, linea, columna);
+
+        // Manejo de operadores: se permite agregar duplicados si son operadores
+        if (type.equals("OperadorAritmetico") || type.equals("OperadorRelacional") || type.equals("OperadorLogico") || type.equals("OperadorUnario")) {
+            tablaSimbolos.add(simbolo);
+            return;
+        }
+
+        // Validar duplicados para otros tipos de símbolos
+        if (!exists(tokenName)) {
+            tablaSimbolos.add(simbolo);
+        } else if (type.equals("FUNCTION")) {
+            throw new RuntimeException("Error semántico: La función '" + tokenName + "' ya existe en la tabla.");
+        } else {
+            throw new RuntimeException("Error semántico: El símbolo '" + tokenName + "' ya existe en la tabla.");
+        }
+    }
+
+    /**
+     * Comprueba si un símbolo con un nombre específico ya existe en la tabla.
+     *
+     * @param nombre El nombre del símbolo a buscar.
+     * @return True si existe, de lo contrario False.
+     */
+    public boolean exists(String nombre) {
+        return tablaSimbolos.stream().anyMatch(s -> s.getNombre().equals(nombre));
     }
 
     /**
      * Devuelve todas las entradas de la tabla de símbolos.
      *
-     * @return Lista de entradas en la tabla de símbolos.
+     * @return Lista de símbolos en la tabla de símbolos.
      */
-    public List<SymbolTableEntry> getEntries() {
-        return symbolTable;
+    public List<Simbolo> getEntries() {
+        return tablaSimbolos;
     }
 
+    /**
+     * Obtiene el tipo de un símbolo dado su nombre.
+     *
+     * @param nombre El nombre del símbolo.
+     * @return El tipo del símbolo como TipoDatos.
+     */
+    public TipoDatos obtenerTipo(String nombre) {
+        for (Simbolo simbolo : tablaSimbolos) {
+            if (simbolo.getNombre().equals(nombre)) {
+                return TipoDatos.valueOf(simbolo.getTipo());
+            }
+        }
+        System.err.println("Error semántico: Variable '" + nombre + "' no declarada.");
+        return null;
+    }
+
+    /**
+     * Obtiene el tipo de un símbolo dado su nombre.
+     *
+     * @param nombre El nombre del símbolo.
+     * @return El tipo del símbolo como TipoDatos.
+     */
+    public Symbol obtenerValor(Symbol nombre) {
+        String variable = nombre.value.toString();
+        for (Simbolo simbolo : tablaSimbolos) {
+            if (simbolo.getNombre().equals(variable)) {
+                return new Symbol(-1, simbolo.getValor());
+            }
+        }
+        System.err.println("Error semántico: Variable '" + variable + "' no declarada.");
+        return nombre;
+    }
 
 
     /**
-     * Clase para representar una entrada en la tabla de símbolos.
+     * Comprueba si dos tipos de datos son compatibles.
+     *
+     * @param tipo1 El primer tipo.
+     * @param tipo2 El segundo tipo.
+     * @return True si son compatibles, False en caso contrario.
      */
-    public class SymbolTableEntry {
-        private final String name;
-        private final Object value;
-        private final String type; // Tipo asociado, ej. int, float, función
-        private final int line;
-        private final int column;
-
-        public SymbolTableEntry(String name, Object value, String type, int line, int column) {
-            this.name = name;
-            this.value = value;
-            this.type = type;
-            this.line = line;
-            this.column = column;
-        }
-
-        public String toString() {
-            return "Símbolo: " + name +
-                    ", Valor: " + value +
-                    ", Tipo: " + type +
-                    ", Línea: " + line +
-                    ", Columna: " + column;
-        }
+    public boolean esTipoCompatible(TipoDatos tipo1, TipoDatos tipo2) {
+        return tipo1.esCompatible(tipo2);
     }
 
-    public void agregarTipoDato(TipoDatos tipoDato){
-        this.tiposDato.put("string",tipoDato);
-    }
+    /**
+     * Imprime la tabla de símbolos.
+     */
+    /**
+     * Imprime la tabla de símbolos en formato tabular.
+     */
 
-    public void declarar(String nombre, TipoDatos tipo) {
-        if (tiposDato.containsKey(nombre)) {
-            throw new RuntimeException("Error semántico: Variable '" + nombre + "' ya declarada.");
+   /* public void imprimirTabla() {
+        System.out.println("---------------------------------------------------------------------------------------------");
+        System.out.printf("| %-15s | %-10s | %-40s | %-5s | %-5s |%n", "Nombre", "Tipo", "Valor", "Línea", "Columna");
+        System.out.println("---------------------------------------------------------------------------------------------");
+        for (Simbolo simbolo : tablaSimbolos) {
+            System.out.printf("| %-15s | %-10s | %-40s | %-5d | %-5d |%n",
+                    simbolo.getNombre(),
+                    simbolo.getTipo(),
+                    simbolo.getValor(),
+                    simbolo.getFila(),
+                    simbolo.getColumna()
+            );
         }
-        tiposDato.put(nombre, tipo);
-    }
+        System.out.println("---------------------------------------------------------------------------------------------");
+    }*/
 
-    public TipoDatos obtenerTipo(String nombre) {
-        if (!tiposDato.containsKey(nombre)) {
-            throw new RuntimeException("Error semántico: Variable '" + nombre + "' no declarada.");
+    /**
+     * Imprime la tabla de símbolos en formato tabular y la escribe en un archivo.
+     */
+    public void imprimirTabla() {
+        String archivoSimbolos = "salida_simbolos.txt";
+        try (BufferedWriter simbolosWriter = new BufferedWriter(new FileWriter(archivoSimbolos, false))) {
+            System.out.println("---------------------------------------------------------------------------------------------");
+            simbolosWriter.write("------------------------------------------------------------------------------------------------------\n");
+            simbolosWriter.write(String.format("| %-15s | %-25s | %-40s | %-5s | %-5s |%n", "Nombre", "Tipo", "Valor", "Línea", "Columna"));
+            simbolosWriter.write("------------------------------------------------------------------------------------------------------\n");
+
+            for (Simbolo simbolo : tablaSimbolos) {
+                String linea = String.format("| %-15s | %-25s | %-40s | %-5d | %-5d |%n",
+                        simbolo.getNombre(),
+                        simbolo.getTipo(),
+                        simbolo.getValor(),
+                        simbolo.getFila(),
+                        simbolo.getColumna()
+                );
+                System.out.print(linea); // Imprime en consola
+                simbolosWriter.write(linea); // Escribe en el archivo
+            }
+
+            simbolosWriter.write("---------------------------------------------------------------------------------------------\n");
+            System.out.println("---------------------------------------------------------------------------------------------");
+        } catch (IOException e) {
+            System.err.println("Error al escribir la tabla de símbolos en el archivo: " + e.getMessage());
         }
-        return tiposDato.get(nombre);
     }
 
 }
-
-

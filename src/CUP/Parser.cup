@@ -9,8 +9,100 @@ import Clases.*;
 
 parser code {:
 
-    TablaSimbolos tablaSimbolos = new TablaSimbolos();
+    public TablaSimbolos tablaSimbolos = new TablaSimbolos();
 
+    public void addToTable(String tipo, String nombre, Symbol valor) {
+        tablaSimbolos.addToSymbolTable(tipo, nombre, valor, 1, 1);
+    }
+
+    public TipoDatos obtenerTipoExpresion(Symbol expression) {
+        if (expression == null) {
+             System.err.println("Error semántico: No se puede determinar el tipo de la expresión.");
+        }
+
+        Object valor = expression.value;
+
+        if (valor instanceof Integer) {
+            return TipoDatos.INTEGER;
+        } else if (valor instanceof Float) {
+            return TipoDatos.FLOAT;
+        } else if (valor instanceof Boolean) {
+            return TipoDatos.BOOL;
+        } else if (valor instanceof String) {
+            String valorStr = (String) valor;
+            if (valorStr.length() == 1) {
+                return TipoDatos.CHAR;
+            } else {
+                return TipoDatos.STRING;
+            }
+        } else {
+             System.err.println("Error semántico: Tipo de dato no reconocido en la expresión.");
+        }
+        return null;
+    }
+
+    public void verificarAsignacion(String nombre, Symbol valor) {
+        System.out.println("Variable:" + valor.value.toString());
+        TipoDatos tipoVariable = tablaSimbolos.obtenerTipo(nombre);
+        TipoDatos tipoValor = obtenerTipoExpresion(valor);
+
+        if (!tablaSimbolos.esTipoCompatible(tipoVariable, tipoValor)) {
+             System.err.println("Error semántico: Tipo incompatible en la asignación a la variable '" + nombre + "'.");
+        }
+    }
+
+    /**
+     * Combina dos expresiones y un operador en un único símbolo.
+     *
+     * @param operandoIzquierdo El símbolo que representa la expresión del lado izquierdo.
+     * @param operador El símbolo que representa el operador.
+     * @param operandoDerecho El símbolo que representa la expresión del lado derecho.
+     * @return Un nuevo símbolo que representa la combinación de las expresiones.
+     */
+    public Symbol combinarExpresiones(Symbol operandoIzquierdo, Symbol operador, Symbol operandoDerecho) {
+        String izquierda = operandoIzquierdo.value.toString();
+        String oper = operador.value.toString();
+        String derecha = operandoDerecho.value.toString();
+
+        String expresionCombinada = izquierda + " " + oper + " " + derecha;
+        return new Symbol(-1, expresionCombinada);
+    }
+
+    /**
+     * Combina un término y un operador unario en un único símbolo.
+     *
+     * @param operadorUnario El símbolo que representa el operador unario.
+     * @param termino El símbolo que representa el término afectado por el operador.
+     * @return Un nuevo símbolo que representa la expresión unaria combinada.
+     */
+    public Symbol combinarExpresionUnaria(Symbol termino, Symbol operadorUnario) {
+        // Obtener las cadenas representativas del operador unario y el término.
+        String term = termino.value.toString();
+        String operador = operadorUnario.value.toString();
+
+        // Construir la representación combinada de la expresión unaria.
+        String expresionUnaria = term + " " + operador ;
+
+        // Crear un nuevo símbolo para la expresión combinada.
+        return new Symbol(-1, expresionUnaria);
+    }
+
+    /**
+     * Combina un término y una expression con parentesis en un único símbolo.
+     *
+     * @param expression El símbolo que representa el operador unario.
+     * @param p1 El símbolo que representa el término afectado por el operador.
+     * @param p2 El símbolo que representa el término afectado por el operador.
+     * @return Un nuevo símbolo que representa la expresión unaria combinada.
+     */
+    public Symbol combinarExpresionParen(String p1, Symbol expression, String p2) {
+        String exp = expression.value.toString();
+
+        String expressionParen = p1 + exp + p2;
+
+        // Crear un nuevo símbolo para la expresión combinada.
+        return new Symbol(-1, expressionParen);
+    }
     @Override
     public void syntax_error(Symbol s) {
         System.err.println("Error sintáctico en línea " + (s.left) + ", columna " + (s.right));
@@ -32,7 +124,6 @@ parser code {:
 
 // Declaración de tokens
 terminal INTEGER, FLOAT, BOOL, CHAR, STRING, INT_LITERAL, FLOAT_LITERAL, CHAR_LITERAL, STRING_LITERAL;
-terminal TRUE, FALSE;
 terminal OPEN_BLOCK, CLOSE_BLOCK, OPEN_BRACKET, CLOSE_BRACKET, OPEN_PAREN, CLOSE_PAREN;
 terminal ASSIGN, END_STATEMENT;
 terminal PLUS, MINUS, MULTIPLY, DIVIDE, MODULO, POWER;
@@ -49,7 +140,7 @@ non terminal paramAux, parametro, sentencias, sentencia;
 non terminal creacion, asignacion, literales, arreglo, accesoArreglo, returnStatement, breakStatement;
 non terminal asignacionArreglo, llamadaFuncion, argumentos, estructuraControl;
 non terminal ifElse, while, for, switch, casos, caso, io, operadorAritmetico, operadorRelacional;
-non terminal operadorLogico, operadorUnario, termino, booleano;
+non terminal operadorLogico, operadorUnario, termino;
 non terminal expressionLogica, expressionRelacional, expressionAritmetica, expressionUnaria;
 non terminal asignacionFor, llamadaFuncionCompleta, expressionCompleta;
 non terminal creacionAsignArreglo;
@@ -84,9 +175,15 @@ program ::= main funciones
 funciones ::= funcion
            | funciones funcion;
 
-funcion ::= encabezadoFunc bloque;
+funcion ::= encabezadoFunc: encabezado bloque: bloque {:
+    Funciones.EncabezadoFuncion encabezadoFuncion = (Funciones.EncabezadoFuncion) encabezado;
+    addToTable(encabezadoFuncion.tipo.toString(), encabezadoFuncion.nombre.toString(), null);
+    :};
 
-encabezadoFunc ::= tipos IDENTIFIER parametros;
+encabezadoFunc ::= tipos:tipo IDENTIFIER: nombre parametros: params {:
+    // Llamar a Funciones.EncabezadoFuncion para crear el objeto de encabezado
+    RESULT = new Funciones.EncabezadoFuncion(tipo, nombre.toString(), params);
+    :};
 
 main ::= MAIN OPEN_PAREN CLOSE_PAREN bloque;
 
@@ -99,13 +196,13 @@ paramAux ::= parametro
 parametro ::= tipos IDENTIFIER;
 
 bloque ::= OPEN_BLOCK  sentencias CLOSE_BLOCK
-        | OPEN_BLOCK argumentos CLOSE_BLOCK;
+         | OPEN_BLOCK argumentos CLOSE_BLOCK;
 
-tipos ::= INTEGER: tipo_int {::}
-       | FLOAT: tipo_float {::}
-       | BOOL: tipo_bool {::}
-       | CHAR: tipo_char {::}
-       | STRING: tipo_string {::};
+tipos ::= INTEGER {: RESULT = TipoDatos.valueOf("INTEGER") ;:}
+        | FLOAT {: RESULT = TipoDatos.valueOf("FLOAT"); :}
+        | BOOL {: RESULT = TipoDatos.valueOf("BOOL"); :}
+        | CHAR {: RESULT = TipoDatos.valueOf("CHAR"); :}
+        | STRING {: RESULT = TipoDatos.valueOf("STRING"); :};
 
 sentencias ::= sentencia
              | sentencias sentencia;
@@ -121,26 +218,28 @@ sentencia ::= creacion
             | breakStatement
             | llamadaFuncionCompleta;
 
-creacion ::= tipos:a IDENTIFIER:b END_STATEMENT:c {:
-    tablaSimbolos.declarar(b.toString(), a);
+creacion ::= tipos: tipo IDENTIFIER: nombre END_STATEMENT {:
+    addToTable(tipo.toString(), (String) nombre, null);
 :};
 
-creacionAsign ::= tipos:a IDENTIFIER:b ASSIGN:c expression:d END_STATEMENT:e {:
-    tablaSimbolos.declarar(b.toString(), a);
-    if (!a.esCompatible((TipoDatos) d)) {
-        throw new RuntimeException("Error semántico: Asignación incompatible en variable '" + b + "'");
-    }
+creacionAsign ::= tipos: tipo IDENTIFIER: nombre ASSIGN expression: valor END_STATEMENT {:
+    addToTable(tipo.toString(), (String) nombre, (Symbol) valor);
 :};
 
-asignacion ::= IDENTIFIER ASSIGN expression END_STATEMENT;
+asignacion ::= IDENTIFIER: nombre ASSIGN expression: valor END_STATEMENT {:
+    System.out.println("Asignacion:" + nombre.toString());
+    verificarAsignacion(nombre.toString(), (Symbol) valor);
+:};
 
-asignacionFor ::= IDENTIFIER ASSIGN expression;
+asignacionFor ::= IDENTIFIER: nombre ASSIGN expression: valor {:
+    addToTable("INTEGER", (String) nombre, (Symbol) valor);
+:};
 
-literales ::= INT_LITERAL
-            | FLOAT_LITERAL
-            | booleano
-            | STRING_LITERAL
-            | CHAR_LITERAL;
+literales ::= INT_LITERAL:i {:RESULT = new Symbol(-1, i);:}
+            | FLOAT_LITERAL:f {:RESULT = new Symbol(-1, f);:}
+            | BOOL_LITERAL:b {:RESULT = new Symbol(-1, b);:}
+            | STRING_LITERAL:s {:RESULT = new Symbol(-1, s);:}
+            | CHAR_LITERAL: c {:RESULT = new Symbol(-1, c);:};
 
 creacionAsignArreglo ::= tipos IDENTIFIER OPEN_BRACKET expression CLOSE_BRACKET END_STATEMENT
           | tipos IDENTIFIER OPEN_BRACKET expression CLOSE_BRACKET ASSIGN bloque END_STATEMENT;
@@ -188,34 +287,98 @@ caso ::= CASE expression COLON sentencias
 io ::= PRINT OPEN_PAREN expression CLOSE_PAREN END_STATEMENT
     | READ OPEN_PAREN IDENTIFIER CLOSE_PAREN END_STATEMENT;
 
-booleano ::= BOOL_LITERAL | TRUE | FALSE;
-
-expression ::= expression operadorLogico expression
-             | expression operadorRelacional expression
-             | expressionAritmetica;
+expression ::= expression: e1 operadorLogico: ol expression: e2 {: RESULT = combinarExpresiones((Symbol) e1,(Symbol) ol,(Symbol) e2); :}
+             | expression: e1 operadorRelacional: or expression: e2 {: RESULT = combinarExpresiones((Symbol) e1,(Symbol) or,(Symbol) e2); :}
+             | expressionAritmetica: ea {:RESULT = ea;:};
 
 expressionCompleta ::= expression END_STATEMENT;
 
-expressionLogica ::= expressionLogica operadorLogico expressionRelacional
-                   | expressionRelacional;
+expressionLogica ::= expressionLogica: el operadorLogico: ol expressionRelacional: er {: RESULT = combinarExpresiones((Symbol) el,(Symbol) ol,(Symbol) er); :}
+                   | expressionRelacional: er {:RESULT = er;:};
 
-expressionRelacional ::= expressionRelacional operadorRelacional expressionAritmetica
-                       | expressionAritmetica;
+expressionRelacional ::= expressionRelacional: er operadorRelacional: or expressionAritmetica: ea {: RESULT = combinarExpresiones((Symbol) er,(Symbol) or,(Symbol) ea); :}
+                       | expressionAritmetica: ea {:RESULT = ea;:};
 
-expressionAritmetica ::= expressionAritmetica operadorAritmetico expressionUnaria
-                       | expressionUnaria;
+expressionAritmetica ::= expressionAritmetica: ea1 operadorAritmetico:oe expressionUnaria: ea2 {: RESULT = combinarExpresiones((Symbol) ea1,(Symbol) oe,(Symbol) ea2); :}
+                       | expressionUnaria: eu {:RESULT = eu;:};
 
-expressionUnaria ::= operadorUnario termino
-                   | termino operadorUnario
-                   | termino;
+expressionUnaria ::= termino: t operadorUnario: ou {: RESULT = combinarExpresionUnaria( tablaSimbolos.obtenerValor((Symbol) t), (Symbol) ou); :}
+                   | termino: t {:RESULT = t;:};
 
-termino ::= IDENTIFIER
-          | literales
+termino ::= IDENTIFIER: i {:RESULT = new Symbol(-1, i);:}
+          | literales: l {:RESULT = l;:}
           | llamadaFuncion
           | accesoArreglo
-          | OPEN_PAREN expression CLOSE_PAREN;
+          | OPEN_PAREN expression: e CLOSE_PAREN {: RESULT = combinarExpresionParen("(", (Symbol) e, ")"); :};
 
-operadorAritmetico ::= PLUS | MINUS | DIVIDE | MULTIPLY | MODULO | POWER;
-operadorRelacional ::= LESS_THAN | LESS_EQUAL | GREATER_THAN | GREATER_EQUAL | EQUAL | NOT_EQUAL;
-operadorLogico ::= AND | OR | NOT;
-operadorUnario ::= INCREMENT | DECREMENT;
+operadorAritmetico ::= PLUS {:
+    addToTable("OperadorAritmetico", "+", null);
+    RESULT = new Symbol(-1, "+");
+:}
+                     | MINUS {:
+    addToTable("OperadorAritmetico", "-", null);
+    RESULT = new Symbol(-1, "-");
+:}
+                     | MULTIPLY {:
+    addToTable("OperadorAritmetico", "*", null);
+    RESULT = new Symbol(-1, "*");
+:}
+                     | DIVIDE {:
+    addToTable("OperadorAritmetico", "/", null);
+    RESULT = new Symbol(-1, "/");
+:}
+                     | MODULO {:
+    addToTable("OperadorAritmetico", "%", null);
+    RESULT = new Symbol(-1, "%");
+:}
+                     | POWER {:
+    addToTable("OperadorAritmetico", "**", null);
+    RESULT = new Symbol(-1, "**");
+:};
+
+operadorRelacional ::= LESS_THAN {:
+    addToTable("OperadorRelacional", "<", null);
+    RESULT = new Symbol(-1, "<");
+:}
+                     | LESS_EQUAL {:
+    addToTable("OperadorRelacional", "<=", null);
+    RESULT = new Symbol(-1, "<=");
+:}
+                     | GREATER_THAN {:
+    addToTable("OperadorRelacional", ">", null);
+    RESULT = new Symbol(-1, ">");
+:}
+                     | GREATER_EQUAL {:
+    addToTable("OperadorRelacional", ">=", null);
+    RESULT = new Symbol(-1, ">=");
+:}
+                     | EQUAL {:
+    addToTable("OperadorRelacional", "==", null);
+    RESULT = new Symbol(-1, "==");
+:}
+                     | NOT_EQUAL {:
+    addToTable("OperadorRelacional", "!=", null);
+    RESULT = new Symbol(-1, "!=");
+:};
+
+operadorLogico ::= AND {:
+    addToTable("OperadorLogico", "&&", null);
+    RESULT = new Symbol(-1, "&&");
+:}
+                 | OR {:
+    addToTable("OperadorLogico", "||", null);
+    RESULT = new Symbol(-1, "||");
+:}
+                 | NOT {:
+    addToTable("OperadorLogico", "!", null);
+    RESULT = new Symbol(-1, "!");
+:};
+
+operadorUnario ::= INCREMENT {:
+    addToTable("OperadorUnario", "++", null);
+    RESULT = new Symbol(-1, "++");
+:}
+                 | DECREMENT {:
+    addToTable("OperadorUnario", "--", null);
+    RESULT = new Symbol(-1, "--");
+:};
