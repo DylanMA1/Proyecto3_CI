@@ -368,10 +368,6 @@ operadorLogico ::= AND {:
                  | OR {:
     addToTable("OperadorLogico", "||", null);
     RESULT = new Symbol(-1, "||");
-:}
-                 | NOT {:
-    addToTable("OperadorLogico", "!", null);
-    RESULT = new Symbol(-1, "!");
 :};
 
 operadorUnario ::= INCREMENT {:
@@ -381,4 +377,7 @@ operadorUnario ::= INCREMENT {:
                  | DECREMENT {:
     addToTable("OperadorUnario", "--", null);
     RESULT = new Symbol(-1, "--");
-:};
+:}               | NOT {:
+    addToTable("OperadorLogico", "!", null);
+    RESULT = new Symbol(-1,"!");
+ :};
