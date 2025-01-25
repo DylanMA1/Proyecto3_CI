@@ -91,19 +91,6 @@ public class Main {
         }
     }
 
-    /*private static void validateSyntax(String filePath) {
-        try (FileReader reader = new FileReader(filePath)) {
-            Lexer lexer = new Lexer(reader);
-            lexer.desactivarImpresionErrores();
-            Parser parser = new Parser(lexer);
-            parser.parse();
-            parser.tablaSimbolos.imprimirTabla();
-            System.out.println("Análisis completado.");
-        } catch (Exception e) {
-            System.err.println("Error durante el análisis: " + e.getMessage());
-        }
-    }*/
-
     private static void validateSyntax(String filePath) {
         try (FileReader reader = new FileReader(filePath)) {
             Lexer lexer = new Lexer(reader);

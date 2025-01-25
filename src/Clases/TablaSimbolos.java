@@ -27,36 +27,10 @@ public class TablaSimbolos {
      * @param linea     La línea donde se encuentra el token.
      * @param columna   La columna donde se encuentra el token.
      */
-    /*public void addToSymbolTable(String type, String tokenName, Symbol valor, int linea, int columna) {
-        String valorString = valor.value != null ? valor.value.toString() : "null";
-
-        Simbolo simbolo = new Simbolo(type, tokenName, valorString, linea, columna);
-        if (!exists(tokenName)) {
-            tablaSimbolos.add(simbolo);
-        } else {
-            throw new RuntimeException("Error semántico: El símbolo '" + tokenName + "' ya existe en la tabla.");
-        }
-    }*/
-
-    /*public void addToSymbolTable(String type, String tokenName, Symbol valor, int linea, int columna) {
-        String valorString = (valor != null && valor.value != null) ? valor.value.toString() : "null";
-
-        Simbolo simbolo = new Simbolo(type, tokenName, valorString, linea, columna);
-
-        // Validar duplicados
-        if (!exists(tokenName)) {
-            tablaSimbolos.add(simbolo);
-        } else if (type.equals("FUNCTION")) {
-            throw new RuntimeException("Error semántico: La función '" + tokenName + "' ya existe en la tabla.");
-        } else {
-            throw new RuntimeException("Error semántico: El símbolo '" + tokenName + "' ya existe en la tabla.");
-        }
-    }*/
-
     public void addToSymbolTable(String type, String tokenName, Symbol valor, int linea, int columna) {
-        String valorString = (valor != null && valor.value != null) ? valor.value.toString() : "null";
+        Object valorObject = (valor != null && valor.value != null) ? valor.value : "null";
 
-        Simbolo simbolo = new Simbolo(type, tokenName, valorString, linea, columna);
+        Simbolo simbolo = new Simbolo(type, tokenName, valorObject, linea, columna);
 
         // Manejo de operadores: se permite agregar duplicados si son operadores
         if (type.equals("OperadorAritmetico") || type.equals("OperadorRelacional") || type.equals("OperadorLogico") || type.equals("OperadorUnario")) {
@@ -73,6 +47,7 @@ public class TablaSimbolos {
             throw new RuntimeException("Error semántico: El símbolo '" + tokenName + "' ya existe en la tabla.");
         }
     }
+
 
     /**
      * Comprueba si un símbolo con un nombre específico ya existe en la tabla.
@@ -137,29 +112,6 @@ public class TablaSimbolos {
     public boolean esTipoCompatible(TipoDatos tipo1, TipoDatos tipo2) {
         return tipo1.esCompatible(tipo2);
     }
-
-    /**
-     * Imprime la tabla de símbolos.
-     */
-    /**
-     * Imprime la tabla de símbolos en formato tabular.
-     */
-
-   /* public void imprimirTabla() {
-        System.out.println("---------------------------------------------------------------------------------------------");
-        System.out.printf("| %-15s | %-10s | %-40s | %-5s | %-5s |%n", "Nombre", "Tipo", "Valor", "Línea", "Columna");
-        System.out.println("---------------------------------------------------------------------------------------------");
-        for (Simbolo simbolo : tablaSimbolos) {
-            System.out.printf("| %-15s | %-10s | %-40s | %-5d | %-5d |%n",
-                    simbolo.getNombre(),
-                    simbolo.getTipo(),
-                    simbolo.getValor(),
-                    simbolo.getFila(),
-                    simbolo.getColumna()
-            );
-        }
-        System.out.println("---------------------------------------------------------------------------------------------");
-    }*/
 
     /**
      * Imprime la tabla de símbolos en formato tabular y la escribe en un archivo.

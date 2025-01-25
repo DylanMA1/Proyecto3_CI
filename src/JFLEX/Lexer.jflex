@@ -46,7 +46,7 @@ public int getColumn() {
 
 // Comentarios
 "#".* { /* Comentario de una línea: ignorar */ }
-"\\"([^\\]|(\\([^\\]|\\n)\\_))"_/" { /* Ignorar comentario multilínea */ }
+"\\_"([^\\_]|(\\_([^\\_]|\\n)*\\_))*"_/" { /* Ignorar comentario multilínea */ }
 
 // Ignorar espacios y tabulaciones
 [ \t]+ { /* Ignorar */ }
@@ -55,7 +55,7 @@ public int getColumn() {
 [\r\n]+ { /* Saltar a la siguiente línea */ }
 
 // Procedimiento Main
-"verano" { return new Symbol(sym.MAIN, yyline + 1, yycolumn + 1); }
+"_verano_" { return new Symbol(sym.MAIN, yyline + 1, yycolumn + 1); }
 
 // Palabras reservadas
 "rodolfo" { return new Symbol(sym.INTEGER, yyline + 1, yycolumn + 1); }
@@ -118,14 +118,14 @@ public int getColumn() {
 \"[^\"]*\" {return new Symbol(sym.STRING_LITERAL, yyline + 1, yycolumn + 1, yytext().substring(1, yytext().length() - 1));}
 
 // Literales
-[0-9]+ { return new Symbol(sym.INT_LITERAL, yyline + 1, yycolumn + 1, Integer.parseInt(yytext())); }
-[0-9]+\.[0-9]+ { return new Symbol(sym.FLOAT_LITERAL, yyline + 1, yycolumn + 1, Float.parseFloat(yytext())); }
+-?[0-9]+ { return new Symbol(sym.INT_LITERAL, yyline + 1, yycolumn + 1, Integer.parseInt(yytext())); }
+-?[0-9]+\.[0-9]+ { return new Symbol(sym.FLOAT_LITERAL, yyline + 1, yycolumn + 1, Float.parseFloat(yytext())); }
 "true"|"false" { return new Symbol(sym.BOOL_LITERAL, yyline + 1, yycolumn + 1, Boolean.parseBoolean(yytext())); }
 '[^']' { return new Symbol(sym.CHAR_LITERAL, yyline + 1, yycolumn + 1, yytext().charAt(1)); }
 "\".*?\"" { return new Symbol(sym.STRING_LITERAL, yyline + 1, yycolumn + 1, yytext().substring(1, yytext().length() - 1)); }
 
 // Identificadores
-([a-zA-Z0-9]+) { return new Symbol(sym.IDENTIFIER, yyline + 1, yycolumn + 1, yytext()); }
+_([a-zA-Z0-9]+)_ { return new Symbol(sym.IDENTIFIER, yyline + 1, yycolumn + 1, yytext()); }
 
 // Coma como separador
 "," { return new Symbol(sym.COMMA, yyline + 1, yycolumn + 1); }

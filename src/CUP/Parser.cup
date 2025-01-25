@@ -44,65 +44,15 @@ parser code {:
     public void verificarAsignacion(String nombre, Symbol valor) {
         System.out.println("Variable:" + valor.value.toString());
         TipoDatos tipoVariable = tablaSimbolos.obtenerTipo(nombre);
+        System.out.println("Tipo: " + tipoVariable);
         TipoDatos tipoValor = obtenerTipoExpresion(valor);
+        System.out.println("Tipo: " + tipoValor);
 
         if (!tablaSimbolos.esTipoCompatible(tipoVariable, tipoValor)) {
              System.err.println("Error semántico: Tipo incompatible en la asignación a la variable '" + nombre + "'.");
         }
     }
 
-    /**
-     * Combina dos expresiones y un operador en un único símbolo.
-     *
-     * @param operandoIzquierdo El símbolo que representa la expresión del lado izquierdo.
-     * @param operador El símbolo que representa el operador.
-     * @param operandoDerecho El símbolo que representa la expresión del lado derecho.
-     * @return Un nuevo símbolo que representa la combinación de las expresiones.
-     */
-    public Symbol combinarExpresiones(Symbol operandoIzquierdo, Symbol operador, Symbol operandoDerecho) {
-        String izquierda = operandoIzquierdo.value.toString();
-        String oper = operador.value.toString();
-        String derecha = operandoDerecho.value.toString();
-
-        String expresionCombinada = izquierda + " " + oper + " " + derecha;
-        return new Symbol(-1, expresionCombinada);
-    }
-
-    /**
-     * Combina un término y un operador unario en un único símbolo.
-     *
-     * @param operadorUnario El símbolo que representa el operador unario.
-     * @param termino El símbolo que representa el término afectado por el operador.
-     * @return Un nuevo símbolo que representa la expresión unaria combinada.
-     */
-    public Symbol combinarExpresionUnaria(Symbol termino, Symbol operadorUnario) {
-        // Obtener las cadenas representativas del operador unario y el término.
-        String term = termino.value.toString();
-        String operador = operadorUnario.value.toString();
-
-        // Construir la representación combinada de la expresión unaria.
-        String expresionUnaria = term + " " + operador ;
-
-        // Crear un nuevo símbolo para la expresión combinada.
-        return new Symbol(-1, expresionUnaria);
-    }
-
-    /**
-     * Combina un término y una expression con parentesis en un único símbolo.
-     *
-     * @param expression El símbolo que representa el operador unario.
-     * @param p1 El símbolo que representa el término afectado por el operador.
-     * @param p2 El símbolo que representa el término afectado por el operador.
-     * @return Un nuevo símbolo que representa la expresión unaria combinada.
-     */
-    public Symbol combinarExpresionParen(String p1, Symbol expression, String p2) {
-        String exp = expression.value.toString();
-
-        String expressionParen = p1 + exp + p2;
-
-        // Crear un nuevo símbolo para la expresión combinada.
-        return new Symbol(-1, expressionParen);
-    }
     @Override
     public void syntax_error(Symbol s) {
         System.err.println("Error sintáctico en línea " + (s.left) + ", columna " + (s.right));
@@ -137,7 +87,7 @@ terminal BOOL_LITERAL, RETURN, BREAK;
 // Declaración de no terminales
 non terminal program, expression, funciones, encabezadoFunc, main;
 non terminal paramAux, parametro, sentencias, sentencia;
-non terminal creacion, asignacion, literales, arreglo, accesoArreglo, returnStatement, breakStatement;
+non terminal creacion, asignacion, literales, accesoArreglo, returnStatement, breakStatement;
 non terminal asignacionArreglo, llamadaFuncion, argumentos, estructuraControl;
 non terminal ifElse, while, for, switch, casos, caso, io, operadorAritmetico, operadorRelacional;
 non terminal operadorLogico, operadorUnario, termino;
@@ -287,29 +237,28 @@ caso ::= CASE expression COLON sentencias
 io ::= PRINT OPEN_PAREN expression CLOSE_PAREN END_STATEMENT
     | READ OPEN_PAREN IDENTIFIER CLOSE_PAREN END_STATEMENT;
 
-expression ::= expression: e1 operadorLogico: ol expression: e2 {: RESULT = combinarExpresiones((Symbol) e1,(Symbol) ol,(Symbol) e2); :}
-             | expression: e1 operadorRelacional: or expression: e2 {: RESULT = combinarExpresiones((Symbol) e1,(Symbol) or,(Symbol) e2); :}
-             | expressionAritmetica: ea {:RESULT = ea;:};
+expression ::=  expressionLogica: el {:RESULT = el;:};
 
 expressionCompleta ::= expression END_STATEMENT;
 
-expressionLogica ::= expressionLogica: el operadorLogico: ol expressionRelacional: er {: RESULT = combinarExpresiones((Symbol) el,(Symbol) ol,(Symbol) er); :}
-                   | expressionRelacional: er {:RESULT = er;:};
+expressionLogica ::= expressionRelacional: er {:RESULT = er;:}
+                   | expressionLogica: el operadorLogico: ol expressionRelacional: er {: RESULT = FuncionesOperadores.combinarExpresionesLogicas((Symbol) el,(Symbol) ol,(Symbol) er); :};
 
-expressionRelacional ::= expressionRelacional: er operadorRelacional: or expressionAritmetica: ea {: RESULT = combinarExpresiones((Symbol) er,(Symbol) or,(Symbol) ea); :}
-                       | expressionAritmetica: ea {:RESULT = ea;:};
+expressionRelacional ::= expressionAritmetica: ea {:RESULT = ea;:}
+                       | expressionRelacional: er operadorRelacional: or expressionAritmetica: ea {: RESULT = FuncionesOperadores.combinarExpresionesRelacionales((Symbol) er,(Symbol) or,(Symbol) ea); :};
 
-expressionAritmetica ::= expressionAritmetica: ea1 operadorAritmetico:oe expressionUnaria: ea2 {: RESULT = combinarExpresiones((Symbol) ea1,(Symbol) oe,(Symbol) ea2); :}
-                       | expressionUnaria: eu {:RESULT = eu;:};
+expressionAritmetica ::= expressionUnaria: eu {:RESULT = eu;:}
+                       | expressionAritmetica: ea1 operadorAritmetico:oe expressionUnaria: ea2 {: RESULT = FuncionesOperadores.combinarExpresionesAritmeticas((Symbol) ea1,(Symbol) oe,(Symbol) ea2); :};
 
-expressionUnaria ::= termino: t operadorUnario: ou {: RESULT = combinarExpresionUnaria( tablaSimbolos.obtenerValor((Symbol) t), (Symbol) ou); :}
-                   | termino: t {:RESULT = t;:};
+expressionUnaria ::= termino: t {:RESULT = t;:}
+                   | termino: t operadorUnario: ou {: RESULT = FuncionesOperadores.combinarExpresionUnaria( (Symbol) t, (Symbol) ou, false); :}
+                   | operadorUnario: ou termino: t  {: RESULT = FuncionesOperadores.combinarExpresionUnaria( (Symbol) t, (Symbol) ou, true); :};
 
-termino ::= IDENTIFIER: i {:RESULT = new Symbol(-1, i);:}
+termino ::= IDENTIFIER: i {:RESULT = tablaSimbolos.obtenerValor(new Symbol (-1, i));:}
           | literales: l {:RESULT = l;:}
           | llamadaFuncion
           | accesoArreglo
-          | OPEN_PAREN expression: e CLOSE_PAREN {: RESULT = combinarExpresionParen("(", (Symbol) e, ")"); :};
+          | OPEN_PAREN expression: e CLOSE_PAREN {: RESULT = e; :};
 
 operadorAritmetico ::= PLUS {:
     addToTable("OperadorAritmetico", "+", null);
@@ -377,7 +326,8 @@ operadorUnario ::= INCREMENT {:
                  | DECREMENT {:
     addToTable("OperadorUnario", "--", null);
     RESULT = new Symbol(-1, "--");
-:}               | NOT {:
-    addToTable("OperadorLogico", "!", null);
-    RESULT = new Symbol(-1,"!");
- :};
+:}
+                 | NOT {:
+        addToTable("OperadorLogico", "!", null);
+        RESULT = new Symbol(-1,"!");
+:};

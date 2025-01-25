@@ -4,19 +4,19 @@ public class Simbolo {
 
     protected String tipo;
     protected String nombre;
-    protected String valor;
+    protected Object valor;
     protected int fila;
     protected int columna;
 
     public Simbolo(){
         tipo = "";
         nombre = "";
-        valor = "";
+        valor = null;
         fila = 0;
         columna = 0;
     }
 
-    public Simbolo(String tipo, String nombre, String valor, int fila, int columna){
+    public Simbolo(String tipo, String nombre, Object valor, int fila, int columna){
         this.tipo = tipo;
         this.nombre = nombre;
         this.valor = valor;
@@ -40,7 +40,7 @@ public class Simbolo {
         return fila;
     }
 
-    public String getValor() {
+    public Object getValor() {
         return valor;
     }
 
@@ -57,7 +57,7 @@ public class Simbolo {
         this.fila = fila;
     }
 
-    public void setValor(String valor) {
+    public void setValor(Object valor) {
         this.valor = valor;
     }
 
