@@ -22,6 +22,9 @@ abrecuento
 
     duende abreregalo _i_ entrega 10 , _i_ snowball 30 nochebuena 2 , _i_ quien cierraregalo
     abrecuento
+
+        bromista _var2_ entrega 10.0 finregalo
+
         envuelve abreregalo _var2_ minstix 12.2 gaspar abreregalo 34 navidad 33 cierraregalo minstix 12 cierraregalo
         abrecuento
 
@@ -40,6 +43,9 @@ abrecuento
             envia finregalo
         cierracuento
 
+        rodolfo _ch_ entrega 2 finregalo
+        rodolfo _id_ entrega 1 finregalo
+
         varios abreregalo _ch_ cierraregalo
         abrecuento
             historia 1 sigue _id_ quien finregalo
@@ -56,11 +62,16 @@ _verano_ abreregalo cierraregalo abrecuento
 Comentario 1
 _/
 
+cometa _s1_ entrega "Hola mundo" finregalo
+cometa _b1_ entrega "Lololololo" finregalo
+cometa _bl1_ entrega "Lololololo222" finregalo
+
 escucha abreregalo _s1_ cierraregalo finregalo
 
 narra abreregalo _b1_ cierraregalo finregalo
 
 _miFunc_ abreregalo _miFunc_ abreregalo cierraregalo ,'a' cierraregalo finregalo
+
 envia _bl1_ finregalo
 
 cierracuento

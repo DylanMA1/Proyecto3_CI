@@ -24,13 +24,11 @@ public class TablaSimbolos {
      * @param type     El token identificado.
      * @param tokenName El nombre del token.
      * @param valor      El tipo asociado (si es aplicable, ej. variables o funciones).
-     * @param linea     La línea donde se encuentra el token.
-     * @param columna   La columna donde se encuentra el token.
      */
-    public void addToSymbolTable(String type, String tokenName, Symbol valor, int linea, int columna) {
+    public void addToSymbolTable(String type, String tokenName, Symbol valor) {
         Object valorObject = (valor != null && valor.value != null) ? valor.value : "null";
 
-        Simbolo simbolo = new Simbolo(type, tokenName, valorObject, linea, columna);
+        Simbolo simbolo = new Simbolo(type, tokenName, valorObject);
 
         // Manejo de operadores: se permite agregar duplicados si son operadores
         if (type.equals("OperadorAritmetico") || type.equals("OperadorRelacional") || type.equals("OperadorLogico") || type.equals("OperadorUnario")) {
@@ -66,6 +64,15 @@ public class TablaSimbolos {
      */
     public List<Simbolo> getEntries() {
         return tablaSimbolos;
+    }
+
+    public Simbolo searchByName(String nombre) {
+        for (Simbolo simbolo : tablaSimbolos) {
+            if (simbolo.getNombre().equals(nombre)) {
+                return simbolo;
+            }
+        }
+        return null;
     }
 
     /**
@@ -120,27 +127,24 @@ public class TablaSimbolos {
         String archivoSimbolos = "salida_simbolos.txt";
         try (BufferedWriter simbolosWriter = new BufferedWriter(new FileWriter(archivoSimbolos, false))) {
             System.out.println("---------------------------------------------------------------------------------------------");
-            simbolosWriter.write("------------------------------------------------------------------------------------------------------\n");
-            simbolosWriter.write(String.format("| %-15s | %-25s | %-40s | %-5s | %-5s |%n", "Nombre", "Tipo", "Valor", "Línea", "Columna"));
-            simbolosWriter.write("------------------------------------------------------------------------------------------------------\n");
+            simbolosWriter.write("----------------------------------------------------------------------------------------------\n");
+            simbolosWriter.write(String.format("| %-15s | %-25s | %-40s |%n", "Nombre", "Tipo", "Valor"));
+            simbolosWriter.write("----------------------------------------------------------------------------------------------\n");
 
             for (Simbolo simbolo : tablaSimbolos) {
-                String linea = String.format("| %-15s | %-25s | %-40s | %-5d | %-5d |%n",
+                String linea = String.format("| %-15s | %-25s | %-40s |%n",
                         simbolo.getNombre(),
                         simbolo.getTipo(),
-                        simbolo.getValor(),
-                        simbolo.getFila(),
-                        simbolo.getColumna()
+                        simbolo.getValor()
                 );
                 System.out.print(linea); // Imprime en consola
                 simbolosWriter.write(linea); // Escribe en el archivo
             }
 
-            simbolosWriter.write("---------------------------------------------------------------------------------------------\n");
+            simbolosWriter.write("------------------------------------------------------------------------------------------\n");
             System.out.println("---------------------------------------------------------------------------------------------");
         } catch (IOException e) {
             System.err.println("Error al escribir la tabla de símbolos en el archivo: " + e.getMessage());
         }
     }
-
 }

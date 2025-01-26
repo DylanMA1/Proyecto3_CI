@@ -78,138 +78,184 @@ Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 23, Columna: 71
 Token: INCREMENT, Tipo: UNDEFINED, Línea: 23, Columna: 75
 Token: CLOSE_PAREN, Tipo: UNDEFINED, Línea: 23, Columna: 81
 Token: OPEN_BLOCK, Tipo: UNDEFINED, Línea: 24, Columna: 5
-Token: WHILE, Tipo: UNDEFINED, Línea: 25, Columna: 9
-Token: OPEN_PAREN, Tipo: UNDEFINED, Línea: 25, Columna: 18
-Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 25, Columna: 29
-Token: GREATER_THAN, Tipo: UNDEFINED, Línea: 25, Columna: 36
-Token: FLOAT_LITERAL, Tipo: UNDEFINED, Línea: 25, Columna: 44
-Token: OR, Tipo: UNDEFINED, Línea: 25, Columna: 49
-Token: OPEN_PAREN, Tipo: UNDEFINED, Línea: 25, Columna: 56
-Token: INT_LITERAL, Tipo: UNDEFINED, Línea: 25, Columna: 67
-Token: PLUS, Tipo: UNDEFINED, Línea: 25, Columna: 70
-Token: INT_LITERAL, Tipo: UNDEFINED, Línea: 25, Columna: 78
-Token: CLOSE_PAREN, Tipo: UNDEFINED, Línea: 25, Columna: 81
-Token: GREATER_THAN, Tipo: UNDEFINED, Línea: 25, Columna: 94
-Token: INT_LITERAL, Tipo: UNDEFINED, Línea: 25, Columna: 102
-Token: CLOSE_PAREN, Tipo: UNDEFINED, Línea: 25, Columna: 105
-Token: OPEN_BLOCK, Tipo: UNDEFINED, Línea: 26, Columna: 9
-Token: INTEGER, Tipo: INTEGER, Línea: 28, Columna: 13
-Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 28, Columna: 21
-Token: ASSIGN, Tipo: UNDEFINED, Línea: 28, Columna: 27
-Token: INT_LITERAL, Tipo: UNDEFINED, Línea: 28, Columna: 35
-Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 28, Columna: 37
-Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 29, Columna: 13
-Token: ASSIGN, Tipo: UNDEFINED, Línea: 29, Columna: 19
-Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 29, Columna: 27
-Token: MINUS, Tipo: UNDEFINED, Línea: 29, Columna: 33
-Token: INT_LITERAL, Tipo: UNDEFINED, Línea: 29, Columna: 45
-Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 29, Columna: 47
-Token: RETURN, Tipo: UNDEFINED, Línea: 31, Columna: 13
-Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 31, Columna: 19
-Token: CLOSE_BLOCK, Tipo: UNDEFINED, Línea: 32, Columna: 9
-Token: IF, Tipo: UNDEFINED, Línea: 34, Columna: 9
-Token: OPEN_PAREN, Tipo: UNDEFINED, Línea: 34, Columna: 14
-Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 34, Columna: 25
-Token: EQUAL, Tipo: UNDEFINED, Línea: 34, Columna: 31
-Token: INT_LITERAL, Tipo: UNDEFINED, Línea: 34, Columna: 36
-Token: CLOSE_PAREN, Tipo: UNDEFINED, Línea: 34, Columna: 38
-Token: OPEN_BLOCK, Tipo: UNDEFINED, Línea: 35, Columna: 9
-Token: RETURN, Tipo: UNDEFINED, Línea: 36, Columna: 13
-Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 36, Columna: 19
-Token: CLOSE_BLOCK, Tipo: UNDEFINED, Línea: 37, Columna: 9
-Token: ELSE, Tipo: UNDEFINED, Línea: 38, Columna: 9
-Token: OPEN_BLOCK, Tipo: UNDEFINED, Línea: 39, Columna: 9
-Token: RETURN, Tipo: UNDEFINED, Línea: 40, Columna: 13
-Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 40, Columna: 19
-Token: CLOSE_BLOCK, Tipo: UNDEFINED, Línea: 41, Columna: 9
-Token: SWITCH, Tipo: UNDEFINED, Línea: 43, Columna: 9
-Token: OPEN_PAREN, Tipo: UNDEFINED, Línea: 43, Columna: 16
-Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 43, Columna: 27
-Token: CLOSE_PAREN, Tipo: UNDEFINED, Línea: 43, Columna: 32
-Token: OPEN_BLOCK, Tipo: UNDEFINED, Línea: 44, Columna: 9
-Token: CASE, Tipo: UNDEFINED, Línea: 45, Columna: 13
-Token: INT_LITERAL, Tipo: UNDEFINED, Línea: 45, Columna: 22
-Token: COLON, Tipo: UNDEFINED, Línea: 45, Columna: 24
-Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 45, Columna: 30
-Token: INCREMENT, Tipo: UNDEFINED, Línea: 45, Columna: 35
-Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 45, Columna: 41
-Token: CASE, Tipo: UNDEFINED, Línea: 46, Columna: 13
-Token: INT_LITERAL, Tipo: UNDEFINED, Línea: 46, Columna: 22
-Token: COLON, Tipo: UNDEFINED, Línea: 46, Columna: 24
-Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 46, Columna: 30
-Token: DECREMENT, Tipo: UNDEFINED, Línea: 46, Columna: 35
-Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 46, Columna: 42
-Token: DEFAULT, Tipo: UNDEFINED, Línea: 47, Columna: 13
-Token: COLON, Tipo: UNDEFINED, Línea: 47, Columna: 20
-Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 47, Columna: 26
-Token: LESS_EQUAL, Tipo: UNDEFINED, Línea: 47, Columna: 31
-Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 47, Columna: 41
-Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 47, Columna: 46
-Token: CLOSE_BLOCK, Tipo: UNDEFINED, Línea: 48, Columna: 9
-Token: CLOSE_BLOCK, Tipo: UNDEFINED, Línea: 49, Columna: 5
-Token: RETURN, Tipo: UNDEFINED, Línea: 50, Columna: 5
-Token: INT_LITERAL, Tipo: UNDEFINED, Línea: 50, Columna: 11
-Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 50, Columna: 13
-Token: CLOSE_BLOCK, Tipo: UNDEFINED, Línea: 51, Columna: 1
-Token: MAIN, Tipo: UNDEFINED, Línea: 53, Columna: 1
-Token: OPEN_PAREN, Tipo: UNDEFINED, Línea: 53, Columna: 10
-Token: CLOSE_PAREN, Tipo: UNDEFINED, Línea: 53, Columna: 21
-Token: OPEN_BLOCK, Tipo: UNDEFINED, Línea: 53, Columna: 34
-Token: READ, Tipo: UNDEFINED, Línea: 59, Columna: 1
-Token: OPEN_PAREN, Tipo: UNDEFINED, Línea: 59, Columna: 9
-Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 59, Columna: 20
-Token: CLOSE_PAREN, Tipo: UNDEFINED, Línea: 59, Columna: 25
-Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 59, Columna: 38
-Token: PRINT, Tipo: UNDEFINED, Línea: 61, Columna: 1
-Token: OPEN_PAREN, Tipo: UNDEFINED, Línea: 61, Columna: 7
-Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 61, Columna: 18
-Token: CLOSE_PAREN, Tipo: UNDEFINED, Línea: 61, Columna: 23
-Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 61, Columna: 36
-Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 63, Columna: 1
-Token: OPEN_PAREN, Tipo: UNDEFINED, Línea: 63, Columna: 10
-Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 63, Columna: 21
-Token: OPEN_PAREN, Tipo: UNDEFINED, Línea: 63, Columna: 30
-Token: CLOSE_PAREN, Tipo: UNDEFINED, Línea: 63, Columna: 41
-Token: COMMA, Tipo: UNDEFINED, Línea: 63, Columna: 54
-Token: CHAR_LITERAL, Tipo: UNDEFINED, Línea: 63, Columna: 55
-Token: CLOSE_PAREN, Tipo: UNDEFINED, Línea: 63, Columna: 59
-Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 63, Columna: 72
-Token: RETURN, Tipo: UNDEFINED, Línea: 64, Columna: 1
-Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 64, Columna: 7
-Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 64, Columna: 13
-Token: CLOSE_BLOCK, Tipo: UNDEFINED, Línea: 66, Columna: 1
-Asignacion:_mibool_
-Variable:(3.7 * 56.6 ++) < 56 && true
-Error semántico: Tipo incompatible en la asignación a la variable '_mibool_'.
-Asignacion:_var_
-Variable:_var_ - 1
-Error semántico: Tipo incompatible en la asignación a la variable '_var_'.
-Error semántico: Variable '_id_' no declarada.
-Error semántico: Variable '_id_' no declarada.
+Token: FLOAT, Tipo: FLOAT, Línea: 26, Columna: 9
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 26, Columna: 18
+Token: ASSIGN, Tipo: UNDEFINED, Línea: 26, Columna: 25
+Token: FLOAT_LITERAL, Tipo: UNDEFINED, Línea: 26, Columna: 33
+Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 26, Columna: 38
+Token: WHILE, Tipo: UNDEFINED, Línea: 28, Columna: 9
+Token: OPEN_PAREN, Tipo: UNDEFINED, Línea: 28, Columna: 18
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 28, Columna: 29
+Token: GREATER_THAN, Tipo: UNDEFINED, Línea: 28, Columna: 36
+Token: FLOAT_LITERAL, Tipo: UNDEFINED, Línea: 28, Columna: 44
+Token: OR, Tipo: UNDEFINED, Línea: 28, Columna: 49
+Token: OPEN_PAREN, Tipo: UNDEFINED, Línea: 28, Columna: 56
+Token: INT_LITERAL, Tipo: UNDEFINED, Línea: 28, Columna: 67
+Token: PLUS, Tipo: UNDEFINED, Línea: 28, Columna: 70
+Token: INT_LITERAL, Tipo: UNDEFINED, Línea: 28, Columna: 78
+Token: CLOSE_PAREN, Tipo: UNDEFINED, Línea: 28, Columna: 81
+Token: GREATER_THAN, Tipo: UNDEFINED, Línea: 28, Columna: 94
+Token: INT_LITERAL, Tipo: UNDEFINED, Línea: 28, Columna: 102
+Token: CLOSE_PAREN, Tipo: UNDEFINED, Línea: 28, Columna: 105
+Token: OPEN_BLOCK, Tipo: UNDEFINED, Línea: 29, Columna: 9
+Token: INTEGER, Tipo: INTEGER, Línea: 31, Columna: 13
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 31, Columna: 21
+Token: ASSIGN, Tipo: UNDEFINED, Línea: 31, Columna: 27
+Token: INT_LITERAL, Tipo: UNDEFINED, Línea: 31, Columna: 35
+Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 31, Columna: 37
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 32, Columna: 13
+Token: ASSIGN, Tipo: UNDEFINED, Línea: 32, Columna: 19
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 32, Columna: 27
+Token: MINUS, Tipo: UNDEFINED, Línea: 32, Columna: 33
+Token: INT_LITERAL, Tipo: UNDEFINED, Línea: 32, Columna: 45
+Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 32, Columna: 47
+Token: RETURN, Tipo: UNDEFINED, Línea: 34, Columna: 13
+Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 34, Columna: 19
+Token: CLOSE_BLOCK, Tipo: UNDEFINED, Línea: 35, Columna: 9
+Token: IF, Tipo: UNDEFINED, Línea: 37, Columna: 9
+Token: OPEN_PAREN, Tipo: UNDEFINED, Línea: 37, Columna: 14
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 37, Columna: 25
+Token: EQUAL, Tipo: UNDEFINED, Línea: 37, Columna: 31
+Token: INT_LITERAL, Tipo: UNDEFINED, Línea: 37, Columna: 36
+Token: CLOSE_PAREN, Tipo: UNDEFINED, Línea: 37, Columna: 38
+Token: OPEN_BLOCK, Tipo: UNDEFINED, Línea: 38, Columna: 9
+Token: RETURN, Tipo: UNDEFINED, Línea: 39, Columna: 13
+Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 39, Columna: 19
+Token: CLOSE_BLOCK, Tipo: UNDEFINED, Línea: 40, Columna: 9
+Token: ELSE, Tipo: UNDEFINED, Línea: 41, Columna: 9
+Token: OPEN_BLOCK, Tipo: UNDEFINED, Línea: 42, Columna: 9
+Token: RETURN, Tipo: UNDEFINED, Línea: 43, Columna: 13
+Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 43, Columna: 19
+Token: CLOSE_BLOCK, Tipo: UNDEFINED, Línea: 44, Columna: 9
+Token: INTEGER, Tipo: INTEGER, Línea: 46, Columna: 9
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 46, Columna: 17
+Token: ASSIGN, Tipo: UNDEFINED, Línea: 46, Columna: 22
+Token: INT_LITERAL, Tipo: UNDEFINED, Línea: 46, Columna: 30
+Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 46, Columna: 32
+Token: INTEGER, Tipo: INTEGER, Línea: 47, Columna: 9
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 47, Columna: 17
+Token: ASSIGN, Tipo: UNDEFINED, Línea: 47, Columna: 22
+Token: INT_LITERAL, Tipo: UNDEFINED, Línea: 47, Columna: 30
+Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 47, Columna: 32
+Token: SWITCH, Tipo: UNDEFINED, Línea: 49, Columna: 9
+Token: OPEN_PAREN, Tipo: UNDEFINED, Línea: 49, Columna: 16
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 49, Columna: 27
+Token: CLOSE_PAREN, Tipo: UNDEFINED, Línea: 49, Columna: 32
+Token: OPEN_BLOCK, Tipo: UNDEFINED, Línea: 50, Columna: 9
+Token: CASE, Tipo: UNDEFINED, Línea: 51, Columna: 13
+Token: INT_LITERAL, Tipo: UNDEFINED, Línea: 51, Columna: 22
+Token: COLON, Tipo: UNDEFINED, Línea: 51, Columna: 24
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 51, Columna: 30
+Token: INCREMENT, Tipo: UNDEFINED, Línea: 51, Columna: 35
+Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 51, Columna: 41
+Token: CASE, Tipo: UNDEFINED, Línea: 52, Columna: 13
+Token: INT_LITERAL, Tipo: UNDEFINED, Línea: 52, Columna: 22
+Token: COLON, Tipo: UNDEFINED, Línea: 52, Columna: 24
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 52, Columna: 30
+Token: DECREMENT, Tipo: UNDEFINED, Línea: 52, Columna: 35
+Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 52, Columna: 42
+Token: DEFAULT, Tipo: UNDEFINED, Línea: 53, Columna: 13
+Token: COLON, Tipo: UNDEFINED, Línea: 53, Columna: 20
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 53, Columna: 26
+Token: LESS_EQUAL, Tipo: UNDEFINED, Línea: 53, Columna: 31
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 53, Columna: 41
+Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 53, Columna: 46
+Token: CLOSE_BLOCK, Tipo: UNDEFINED, Línea: 54, Columna: 9
+Token: CLOSE_BLOCK, Tipo: UNDEFINED, Línea: 55, Columna: 5
+Token: RETURN, Tipo: UNDEFINED, Línea: 56, Columna: 5
+Token: INT_LITERAL, Tipo: UNDEFINED, Línea: 56, Columna: 11
+Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 56, Columna: 13
+Token: CLOSE_BLOCK, Tipo: UNDEFINED, Línea: 57, Columna: 1
+Token: MAIN, Tipo: UNDEFINED, Línea: 59, Columna: 1
+Token: OPEN_PAREN, Tipo: UNDEFINED, Línea: 59, Columna: 10
+Token: CLOSE_PAREN, Tipo: UNDEFINED, Línea: 59, Columna: 21
+Token: OPEN_BLOCK, Tipo: UNDEFINED, Línea: 59, Columna: 34
+Token: STRING, Tipo: STRING, Línea: 65, Columna: 1
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 65, Columna: 8
+Token: ASSIGN, Tipo: UNDEFINED, Línea: 65, Columna: 13
+Token: STRING_LITERAL, Tipo: UNDEFINED, Línea: 65, Columna: 21
+Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 65, Columna: 34
+Token: STRING, Tipo: STRING, Línea: 66, Columna: 1
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 66, Columna: 8
+Token: ASSIGN, Tipo: UNDEFINED, Línea: 66, Columna: 13
+Token: STRING_LITERAL, Tipo: UNDEFINED, Línea: 66, Columna: 21
+Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 66, Columna: 34
+Token: STRING, Tipo: STRING, Línea: 67, Columna: 1
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 67, Columna: 8
+Token: ASSIGN, Tipo: UNDEFINED, Línea: 67, Columna: 14
+Token: STRING_LITERAL, Tipo: UNDEFINED, Línea: 67, Columna: 22
+Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 67, Columna: 38
+Token: READ, Tipo: UNDEFINED, Línea: 69, Columna: 1
+Token: OPEN_PAREN, Tipo: UNDEFINED, Línea: 69, Columna: 9
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 69, Columna: 20
+Token: CLOSE_PAREN, Tipo: UNDEFINED, Línea: 69, Columna: 25
+Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 69, Columna: 38
+Token: PRINT, Tipo: UNDEFINED, Línea: 71, Columna: 1
+Token: OPEN_PAREN, Tipo: UNDEFINED, Línea: 71, Columna: 7
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 71, Columna: 18
+Token: CLOSE_PAREN, Tipo: UNDEFINED, Línea: 71, Columna: 23
+Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 71, Columna: 36
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 73, Columna: 1
+Token: OPEN_PAREN, Tipo: UNDEFINED, Línea: 73, Columna: 10
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 73, Columna: 21
+Token: OPEN_PAREN, Tipo: UNDEFINED, Línea: 73, Columna: 30
+Token: CLOSE_PAREN, Tipo: UNDEFINED, Línea: 73, Columna: 41
+Token: COMMA, Tipo: UNDEFINED, Línea: 73, Columna: 54
+Token: CHAR_LITERAL, Tipo: UNDEFINED, Línea: 73, Columna: 55
+Token: CLOSE_PAREN, Tipo: UNDEFINED, Línea: 73, Columna: 59
+Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 73, Columna: 72
+Token: RETURN, Tipo: UNDEFINED, Línea: 75, Columna: 1
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 75, Columna: 7
+Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 75, Columna: 13
+Token: CLOSE_BLOCK, Tipo: UNDEFINED, Línea: 77, Columna: 1
+Nombre: _miChar_ Tipo variable: java_cup.runtime.Symbol
+Nombre: _str1_ Tipo variable: java_cup.runtime.Symbol
+Nombre: _fl1_ Tipo variable: java_cup.runtime.Symbol
+Nombre: _lit_ Tipo variable: java_cup.runtime.Symbol
+Nombre: _mibool_ Tipo variable: java_cup.runtime.Symbol
+Variable:false
+Tipo: BOOL
+Tipo: BOOL
+Nombre: _var2_ Tipo variable: java_cup.runtime.Symbol
+Nombre: _var_ Tipo variable: java_cup.runtime.Symbol
+Variable:0
+Tipo: INTEGER
+Tipo: INTEGER
+Nombre: _ch_ Tipo variable: java_cup.runtime.Symbol
+Nombre: _id_ Tipo variable: java_cup.runtime.Symbol
+Nombre: _s1_ Tipo variable: java_cup.runtime.Symbol
+Nombre: _b1_ Tipo variable: java_cup.runtime.Symbol
+Nombre: _bl1_ Tipo variable: java_cup.runtime.Symbol
 ---------------------------------------------------------------------------------------------
-| _miChar_        | CHAR                      | !                                        | 1     | 1     |
-| _str1_          | STRING                    | Hola $%&/gaspar$& cierraregalo mundo     | 1     | 1     |
-| _fl1_           | FLOAT                     | 56.6                                     | 1     | 1     |
-| _lit_           | INTEGER                   | 2                                        | 1     | 1     |
-| _mibool_        | BOOL                      | true                                     | 1     | 1     |
-| *               | OperadorAritmetico        | null                                     | 1     | 1     |
-| ++              | OperadorUnario            | null                                     | 1     | 1     |
-| <               | OperadorRelacional        | null                                     | 1     | 1     |
-| &&              | OperadorLogico            | null                                     | 1     | 1     |
-| _i_             | INTEGER                   | 10                                       | 1     | 1     |
-| <               | OperadorRelacional        | null                                     | 1     | 1     |
-| *               | OperadorAritmetico        | null                                     | 1     | 1     |
-| ++              | OperadorUnario            | null                                     | 1     | 1     |
-| >               | OperadorRelacional        | null                                     | 1     | 1     |
-| ||              | OperadorLogico            | null                                     | 1     | 1     |
-| +               | OperadorAritmetico        | null                                     | 1     | 1     |
-| >               | OperadorRelacional        | null                                     | 1     | 1     |
-| _var_           | INTEGER                   | 1                                        | 1     | 1     |
-| -               | OperadorAritmetico        | null                                     | 1     | 1     |
-| ==              | OperadorRelacional        | null                                     | 1     | 1     |
-| ++              | OperadorUnario            | null                                     | 1     | 1     |
-| --              | OperadorUnario            | null                                     | 1     | 1     |
-| <=              | OperadorRelacional        | null                                     | 1     | 1     |
-| _func1_         | FLOAT                     | null                                     | 1     | 1     |
+| _miChar_        | CHAR                      | !                                        |
+| _str1_          | STRING                    | Hola $%&/gaspar$& cierraregalo mundo     |
+| _fl1_           | FLOAT                     | 56.6                                     |
+| _lit_           | INTEGER                   | 2                                        |
+| _mibool_        | BOOL                      | true                                     |
+| *               | OperadorAritmetico        | null                                     |
+| ++              | OperadorUnario            | null                                     |
+| <               | OperadorRelacional        | null                                     |
+| &&              | OperadorLogico            | null                                     |
+| _i_             | INTEGER                   | 10                                       |
+| <               | OperadorRelacional        | null                                     |
+| *               | OperadorAritmetico        | null                                     |
+| ++              | OperadorUnario            | null                                     |
+| _var2_          | FLOAT                     | 10.0                                     |
+| >               | OperadorRelacional        | null                                     |
+| ||              | OperadorLogico            | null                                     |
+| +               | OperadorAritmetico        | null                                     |
+| >               | OperadorRelacional        | null                                     |
+| _var_           | INTEGER                   | 1                                        |
+| -               | OperadorAritmetico        | null                                     |
+| ==              | OperadorRelacional        | null                                     |
+| _ch_            | INTEGER                   | 2                                        |
+| _id_            | INTEGER                   | 1                                        |
+| ++              | OperadorUnario            | null                                     |
+| --              | OperadorUnario            | null                                     |
+| <=              | OperadorRelacional        | null                                     |
+| _func1_         | FLOAT                     | null                                     |
+| _s1_            | STRING                    | Hola mundo                               |
+| _b1_            | STRING                    | Lololololo                               |
+| _bl1_           | STRING                    | Lololololo222                            |
 ---------------------------------------------------------------------------------------------
 Análisis completado.

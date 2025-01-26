@@ -11,10 +11,6 @@ parser code {:
 
     public TablaSimbolos tablaSimbolos = new TablaSimbolos();
 
-    public void addToTable(String tipo, String nombre, Symbol valor) {
-        tablaSimbolos.addToSymbolTable(tipo, nombre, valor, 1, 1);
-    }
-
     public TipoDatos obtenerTipoExpresion(Symbol expression) {
         if (expression == null) {
              System.err.println("Error semántico: No se puede determinar el tipo de la expresión.");
@@ -73,7 +69,7 @@ parser code {:
 :};
 
 // Declaración de tokens
-terminal INTEGER, FLOAT, BOOL, CHAR, STRING, INT_LITERAL, FLOAT_LITERAL, CHAR_LITERAL, STRING_LITERAL;
+terminal INTEGER, FLOAT, BOOL, CHAR, STRING;
 terminal OPEN_BLOCK, CLOSE_BLOCK, OPEN_BRACKET, CLOSE_BRACKET, OPEN_PAREN, CLOSE_PAREN;
 terminal ASSIGN, END_STATEMENT;
 terminal PLUS, MINUS, MULTIPLY, DIVIDE, MODULO, POWER;
@@ -82,7 +78,9 @@ terminal LESS_THAN, LESS_EQUAL, GREATER_THAN, GREATER_EQUAL, EQUAL, NOT_EQUAL;
 terminal AND, OR, NOT;
 terminal IF, ELSE, WHILE, FOR, SWITCH, CASE, DEFAULT;
 terminal IDENTIFIER, MAIN, PRINT, READ, COLON, COMMA;
-terminal BOOL_LITERAL, RETURN, BREAK;
+terminal RETURN, BREAK;
+
+terminal Object INT_LITERAL, FLOAT_LITERAL, BOOL_LITERAL, STRING_LITERAL, CHAR_LITERAL;
 
 // Declaración de no terminales
 non terminal program, expression, funciones, encabezadoFunc, main;
@@ -127,12 +125,10 @@ funciones ::= funcion
 
 funcion ::= encabezadoFunc: encabezado bloque: bloque {:
     Funciones.EncabezadoFuncion encabezadoFuncion = (Funciones.EncabezadoFuncion) encabezado;
-    addToTable(encabezadoFuncion.tipo.toString(), encabezadoFuncion.nombre.toString(), null);
+    tablaSimbolos.addToSymbolTable(encabezadoFuncion.tipo.toString(), encabezadoFuncion.nombre.toString(), null);
     :};
 
-encabezadoFunc ::= tipos:tipo IDENTIFIER: nombre parametros: params {:
-    // Llamar a Funciones.EncabezadoFuncion para crear el objeto de encabezado
-    RESULT = new Funciones.EncabezadoFuncion(tipo, nombre.toString(), params);
+encabezadoFunc ::= tipos:tipo IDENTIFIER: nombre parametros: params {: RESULT = new Funciones.EncabezadoFuncion(tipo, nombre.toString(), params);
     :};
 
 main ::= MAIN OPEN_PAREN CLOSE_PAREN bloque;
@@ -169,27 +165,44 @@ sentencia ::= creacion
             | llamadaFuncionCompleta;
 
 creacion ::= tipos: tipo IDENTIFIER: nombre END_STATEMENT {:
-    addToTable(tipo.toString(), (String) nombre, null);
+    tablaSimbolos.addToSymbolTable(tipo.toString(), (String) nombre, null);
 :};
 
 creacionAsign ::= tipos: tipo IDENTIFIER: nombre ASSIGN expression: valor END_STATEMENT {:
-    addToTable(tipo.toString(), (String) nombre, (Symbol) valor);
+    System.out.println("Nombre: " + nombre + " Tipo variable: " + valor.getClass().getName());
+    tablaSimbolos.addToSymbolTable(tipo.toString(), (String) nombre, (Symbol) valor);
 :};
-
+////////////////////////////////////////
+//Asignacion con los operadores unarios duda
+///////////////////////////////////////////
 asignacion ::= IDENTIFIER: nombre ASSIGN expression: valor END_STATEMENT {:
-    System.out.println("Asignacion:" + nombre.toString());
     verificarAsignacion(nombre.toString(), (Symbol) valor);
 :};
 
 asignacionFor ::= IDENTIFIER: nombre ASSIGN expression: valor {:
-    addToTable("INTEGER", (String) nombre, (Symbol) valor);
+    tablaSimbolos.addToSymbolTable("INTEGER", (String) nombre, (Symbol) valor);
 :};
 
-literales ::= INT_LITERAL:i {:RESULT = new Symbol(-1, i);:}
-            | FLOAT_LITERAL:f {:RESULT = new Symbol(-1, f);:}
-            | BOOL_LITERAL:b {:RESULT = new Symbol(-1, b);:}
-            | STRING_LITERAL:s {:RESULT = new Symbol(-1, s);:}
-            | CHAR_LITERAL: c {:RESULT = new Symbol(-1, c);:};
+literales ::= INT_LITERAL:i {:
+    Symbol symbol = (Symbol) stack.peek();
+    RESULT = symbol;
+:}
+| FLOAT_LITERAL:f {:
+    Symbol symbol = (Symbol) stack.peek();
+    RESULT = symbol;
+:}
+| BOOL_LITERAL:b {:
+    Symbol symbol = (Symbol) stack.peek();
+    RESULT = symbol;
+:}
+| STRING_LITERAL:s {:
+    Symbol symbol = (Symbol) stack.peek();
+    RESULT = symbol;
+:}
+| CHAR_LITERAL:c {:
+    Symbol symbol = (Symbol) stack.peek();
+    RESULT = symbol;
+:};
 
 creacionAsignArreglo ::= tipos IDENTIFIER OPEN_BRACKET expression CLOSE_BRACKET END_STATEMENT
           | tipos IDENTIFIER OPEN_BRACKET expression CLOSE_BRACKET ASSIGN bloque END_STATEMENT;
@@ -254,80 +267,81 @@ expressionUnaria ::= termino: t {:RESULT = t;:}
                    | termino: t operadorUnario: ou {: RESULT = FuncionesOperadores.combinarExpresionUnaria( (Symbol) t, (Symbol) ou, false); :}
                    | operadorUnario: ou termino: t  {: RESULT = FuncionesOperadores.combinarExpresionUnaria( (Symbol) t, (Symbol) ou, true); :};
 
-termino ::= IDENTIFIER: i {:RESULT = tablaSimbolos.obtenerValor(new Symbol (-1, i));:}
+termino ::= IDENTIFIER: i {: RESULT = tablaSimbolos.obtenerValor(new Symbol (-1, i))
+;:}
           | literales: l {:RESULT = l;:}
           | llamadaFuncion
           | accesoArreglo
           | OPEN_PAREN expression: e CLOSE_PAREN {: RESULT = e; :};
 
 operadorAritmetico ::= PLUS {:
-    addToTable("OperadorAritmetico", "+", null);
+    tablaSimbolos.addToSymbolTable("OperadorAritmetico", "+", null);
     RESULT = new Symbol(-1, "+");
 :}
                      | MINUS {:
-    addToTable("OperadorAritmetico", "-", null);
+    tablaSimbolos.addToSymbolTable("OperadorAritmetico", "-", null);
     RESULT = new Symbol(-1, "-");
 :}
                      | MULTIPLY {:
-    addToTable("OperadorAritmetico", "*", null);
+    tablaSimbolos.addToSymbolTable("OperadorAritmetico", "*", null);
     RESULT = new Symbol(-1, "*");
 :}
                      | DIVIDE {:
-    addToTable("OperadorAritmetico", "/", null);
+    tablaSimbolos.addToSymbolTable("OperadorAritmetico", "/", null);
     RESULT = new Symbol(-1, "/");
 :}
                      | MODULO {:
-    addToTable("OperadorAritmetico", "%", null);
+    tablaSimbolos.addToSymbolTable("OperadorAritmetico", "%", null);
     RESULT = new Symbol(-1, "%");
 :}
                      | POWER {:
-    addToTable("OperadorAritmetico", "**", null);
+    tablaSimbolos.addToSymbolTable("OperadorAritmetico", "**", null);
     RESULT = new Symbol(-1, "**");
 :};
 
 operadorRelacional ::= LESS_THAN {:
-    addToTable("OperadorRelacional", "<", null);
+    tablaSimbolos.addToSymbolTable("OperadorRelacional", "<", null);
     RESULT = new Symbol(-1, "<");
 :}
                      | LESS_EQUAL {:
-    addToTable("OperadorRelacional", "<=", null);
+    tablaSimbolos.addToSymbolTable("OperadorRelacional", "<=", null);
     RESULT = new Symbol(-1, "<=");
 :}
                      | GREATER_THAN {:
-    addToTable("OperadorRelacional", ">", null);
+    tablaSimbolos.addToSymbolTable("OperadorRelacional", ">", null);
     RESULT = new Symbol(-1, ">");
 :}
                      | GREATER_EQUAL {:
-    addToTable("OperadorRelacional", ">=", null);
+    tablaSimbolos.addToSymbolTable("OperadorRelacional", ">=", null);
     RESULT = new Symbol(-1, ">=");
 :}
                      | EQUAL {:
-    addToTable("OperadorRelacional", "==", null);
+    tablaSimbolos.addToSymbolTable("OperadorRelacional", "==", null);
     RESULT = new Symbol(-1, "==");
 :}
                      | NOT_EQUAL {:
-    addToTable("OperadorRelacional", "!=", null);
+    tablaSimbolos.addToSymbolTable("OperadorRelacional", "!=", null);
     RESULT = new Symbol(-1, "!=");
 :};
 
 operadorLogico ::= AND {:
-    addToTable("OperadorLogico", "&&", null);
+    tablaSimbolos.addToSymbolTable("OperadorLogico", "&&", null);
     RESULT = new Symbol(-1, "&&");
 :}
                  | OR {:
-    addToTable("OperadorLogico", "||", null);
+    tablaSimbolos.addToSymbolTable("OperadorLogico", "||", null);
     RESULT = new Symbol(-1, "||");
 :};
 
 operadorUnario ::= INCREMENT {:
-    addToTable("OperadorUnario", "++", null);
+    tablaSimbolos.addToSymbolTable("OperadorUnario", "++", null);
     RESULT = new Symbol(-1, "++");
 :}
                  | DECREMENT {:
-    addToTable("OperadorUnario", "--", null);
+    tablaSimbolos.addToSymbolTable("OperadorUnario", "--", null);
     RESULT = new Symbol(-1, "--");
 :}
                  | NOT {:
-        addToTable("OperadorLogico", "!", null);
-        RESULT = new Symbol(-1,"!");
+    tablaSimbolos.addToSymbolTable("OperadorLogico", "!", null);
+    RESULT = new Symbol(-1,"!");
 :};

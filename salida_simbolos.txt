@@ -1,28 +1,34 @@
 ------------------------------------------------------------------------------------------------------
-| Nombre          | Tipo                      | Valor                                    | Línea | Columna |
+| Nombre          | Tipo                      | Valor                                    |
 ------------------------------------------------------------------------------------------------------
-| _miChar_        | CHAR                      | !                                        | 1     | 1     |
-| _str1_          | STRING                    | Hola $%&/gaspar$& cierraregalo mundo     | 1     | 1     |
-| _fl1_           | FLOAT                     | 56.6                                     | 1     | 1     |
-| _lit_           | INTEGER                   | 2                                        | 1     | 1     |
-| _mibool_        | BOOL                      | true                                     | 1     | 1     |
-| *               | OperadorAritmetico        | null                                     | 1     | 1     |
-| ++              | OperadorUnario            | null                                     | 1     | 1     |
-| <               | OperadorRelacional        | null                                     | 1     | 1     |
-| &&              | OperadorLogico            | null                                     | 1     | 1     |
-| _i_             | INTEGER                   | 10                                       | 1     | 1     |
-| <               | OperadorRelacional        | null                                     | 1     | 1     |
-| *               | OperadorAritmetico        | null                                     | 1     | 1     |
-| ++              | OperadorUnario            | null                                     | 1     | 1     |
-| >               | OperadorRelacional        | null                                     | 1     | 1     |
-| ||              | OperadorLogico            | null                                     | 1     | 1     |
-| +               | OperadorAritmetico        | null                                     | 1     | 1     |
-| >               | OperadorRelacional        | null                                     | 1     | 1     |
-| _var_           | INTEGER                   | 1                                        | 1     | 1     |
-| -               | OperadorAritmetico        | null                                     | 1     | 1     |
-| ==              | OperadorRelacional        | null                                     | 1     | 1     |
-| ++              | OperadorUnario            | null                                     | 1     | 1     |
-| --              | OperadorUnario            | null                                     | 1     | 1     |
-| <=              | OperadorRelacional        | null                                     | 1     | 1     |
-| _func1_         | FLOAT                     | null                                     | 1     | 1     |
+| _miChar_        | CHAR                      | !                                        |
+| _str1_          | STRING                    | Hola $%&/gaspar$& cierraregalo mundo     |
+| _fl1_           | FLOAT                     | 56.6                                     |
+| _lit_           | INTEGER                   | 2                                        |
+| _mibool_        | BOOL                      | true                                     |
+| *               | OperadorAritmetico        | null                                     |
+| ++              | OperadorUnario            | null                                     |
+| <               | OperadorRelacional        | null                                     |
+| &&              | OperadorLogico            | null                                     |
+| _i_             | INTEGER                   | 10                                       |
+| <               | OperadorRelacional        | null                                     |
+| *               | OperadorAritmetico        | null                                     |
+| ++              | OperadorUnario            | null                                     |
+| _var2_          | FLOAT                     | 10.0                                     |
+| >               | OperadorRelacional        | null                                     |
+| ||              | OperadorLogico            | null                                     |
+| +               | OperadorAritmetico        | null                                     |
+| >               | OperadorRelacional        | null                                     |
+| _var_           | INTEGER                   | 1                                        |
+| -               | OperadorAritmetico        | null                                     |
+| ==              | OperadorRelacional        | null                                     |
+| _ch_            | INTEGER                   | 2                                        |
+| _id_            | INTEGER                   | 1                                        |
+| ++              | OperadorUnario            | null                                     |
+| --              | OperadorUnario            | null                                     |
+| <=              | OperadorRelacional        | null                                     |
+| _func1_         | FLOAT                     | null                                     |
+| _s1_            | STRING                    | Hola mundo                               |
+| _b1_            | STRING                    | Lololololo                               |
+| _bl1_           | STRING                    | Lololololo222                            |
 ---------------------------------------------------------------------------------------------
