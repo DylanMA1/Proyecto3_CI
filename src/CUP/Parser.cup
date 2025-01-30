@@ -4,6 +4,8 @@ import java_cup.runtime.Symbol;
 import java.util.HashMap;
 import java.util.Map;
 import Clases.*;
+import java.util.List;
+import java.util.ArrayList;
 
 // Modificaciones en producciones
 
@@ -25,12 +27,9 @@ parser code {:
         } else if (valor instanceof Boolean) {
             return TipoDatos.BOOL;
         } else if (valor instanceof String) {
-            String valorStr = (String) valor;
-            if (valorStr.length() == 1) {
-                return TipoDatos.CHAR;
-            } else {
-                return TipoDatos.STRING;
-            }
+            return TipoDatos.STRING;
+        } else if (valor instanceof Character) {
+            return TipoDatos.CHAR;
         } else {
              System.err.println("Error semántico: Tipo de dato no reconocido en la expresión.");
         }
@@ -38,16 +37,79 @@ parser code {:
     }
 
     public void verificarAsignacion(String nombre, Symbol valor) {
-        System.out.println("Variable:" + valor.value.toString());
+        if (valor.value instanceof List) {
+            verificarAsignacionArregloCompleto(nombre, valor);
+            return;
+        }
         TipoDatos tipoVariable = tablaSimbolos.obtenerTipo(nombre);
-        System.out.println("Tipo: " + tipoVariable);
         TipoDatos tipoValor = obtenerTipoExpresion(valor);
-        System.out.println("Tipo: " + tipoValor);
 
         if (!tablaSimbolos.esTipoCompatible(tipoVariable, tipoValor)) {
              System.err.println("Error semántico: Tipo incompatible en la asignación a la variable '" + nombre + "'.");
         }
     }
+
+    /**
+     * Verifica la asignación a un elemento específico del arreglo.
+     *
+     * @param nombreArreglo El símbolo del arreglo.
+     * @param indice         El índice del arreglo.
+     * @param valor          El valor a asignar.
+     * @throws RuntimeException Si la asignación no es válida.
+     */
+    private void verificarAsignacionElementoArreglo(String nombreArreglo, Symbol indice, Symbol valor) {
+        // Verificar que el índice sea un entero
+        if (!(indice.value instanceof Integer)) {
+            throw new RuntimeException("Error semántico: El índice del arreglo debe ser un entero.");
+        }
+        int idx = (Integer) indice.value;
+
+        // Verificar que el índice esté dentro de los límites del arreglo
+        if (idx < 0 || idx >= tablaSimbolos.searchByName(nombreArreglo).getArraySize()) {
+            throw new RuntimeException("Error semántico: Índice fuera de los límites para el arreglo '" + nombreArreglo + "'.");
+        }
+
+        // Obtener el tipo del valor a asignar
+        TipoDatos tipoValor = obtenerTipoExpresion(valor);
+
+        // Verificar compatibilidad de tipos
+        if (!tablaSimbolos.esTipoCompatible(tablaSimbolos.obtenerTipo(nombreArreglo), tipoValor)) {
+            throw new RuntimeException("Error semántico: Tipo incompatible en la asignación al arreglo '" + nombreArreglo + "'.");
+        }
+    }
+
+    /**
+     * Verifica la asignación de un arreglo completo.
+     *
+     * @param nombreArreglo El símbolo del arreglo destino.
+     * @param valor          El valor a asignar (debe ser una lista de valores).
+     * @throws RuntimeException Si la asignación no es válida.
+     */
+    private void verificarAsignacionArregloCompleto(String nombreArreglo, Symbol valor) {
+
+        // Verificar que el valor sea una lista de valores
+        if (!(valor.value instanceof List)) {
+            throw new RuntimeException("Error semántico: Se esperaba una lista de valores para la asignación del arreglo.");
+        }
+        List<Object> valores = (List<Object>) valor.value;
+        System.out.println("Valores: " + valores + " Tipo de variable: " + valores.getClass().getName());
+        // Verificar que el tamaño de la lista coincida con el tamaño del arreglo
+        if (valores.size() != tablaSimbolos.searchByName(nombreArreglo).getArraySize()) {
+            throw new RuntimeException("Error semántico: El tamaño de la lista no coincide con el tamaño del arreglo '" + nombreArreglo + "'.");
+        }
+
+        // Verificar que todos los valores de la lista sean compatibles con el tipo del arreglo
+        TipoDatos tipoArreglo = tablaSimbolos.obtenerTipo(nombreArreglo);
+
+        for (Object valorElemento : valores) {
+            TipoDatos tipoElemento = obtenerTipoExpresion(new Symbol(-1, valorElemento));
+
+            if (!tablaSimbolos.esTipoCompatible(tipoArreglo, tipoElemento)) {
+                throw new RuntimeException("Error semántico: Tipo incompatible en la asignación al arreglo '" + nombreArreglo + "'.");
+            }
+        }
+    }
+
 
     @Override
     public void syntax_error(Symbol s) {
@@ -93,9 +155,8 @@ non terminal expressionLogica, expressionRelacional, expressionAritmetica, expre
 non terminal asignacionFor, llamadaFuncionCompleta, expressionCompleta;
 non terminal creacionAsignArreglo;
 
-non terminal String funcion, parametros, bloque;
 non terminal TipoDatos tipos;
-non terminal Object creacionAsign;
+non terminal Object creacionAsign, funcion, bloque, parametros;
 
 // Precedencia y asociatividad
 precedence left OR;
@@ -112,10 +173,10 @@ precedence nonassoc END_STATEMENT;
 start with program;
 
 // Reglas de producción
-program ::= main funciones
-          | funciones main
-          | funciones
-          | main
+program ::= main funciones {: tablaSimbolos.asignarAmbito(); :}
+          | funciones main {: tablaSimbolos.asignarAmbito(); :}
+          | funciones {: tablaSimbolos.asignarAmbito(); :}
+          | main {: tablaSimbolos.asignarAmbito(); :}
           | error END_STATEMENT {:
                 System.err.println("Recuperación: Se ignoró el error hasta ';'");
           :};
@@ -125,11 +186,12 @@ funciones ::= funcion
 
 funcion ::= encabezadoFunc: encabezado bloque: bloque {:
     Funciones.EncabezadoFuncion encabezadoFuncion = (Funciones.EncabezadoFuncion) encabezado;
-    tablaSimbolos.addToSymbolTable(encabezadoFuncion.tipo.toString(), encabezadoFuncion.nombre.toString(), null);
-    :};
+    tablaSimbolos.addToSymbolTable(encabezadoFuncion.tipo.toString(), "FUNCTION", encabezadoFuncion.nombre.toString(), null, -1 , "");
+:};
 
-encabezadoFunc ::= tipos:tipo IDENTIFIER: nombre parametros: params {: RESULT = new Funciones.EncabezadoFuncion(tipo, nombre.toString(), params);
-    :};
+encabezadoFunc ::= tipos:tipo IDENTIFIER: nombre parametros: params {:
+    RESULT = new Funciones.EncabezadoFuncion(tipo, nombre.toString(), params);
+:};
 
 main ::= MAIN OPEN_PAREN CLOSE_PAREN bloque;
 
@@ -139,10 +201,12 @@ parametros ::= OPEN_PAREN CLOSE_PAREN
 paramAux ::= parametro
            | paramAux COMMA parametro;
 
-parametro ::= tipos IDENTIFIER;
+parametro ::= tipos: t IDENTIFIER: nombre {:
+    tablaSimbolos.addToSymbolTable(t.toString(), "PARAMETER", (String) nombre, null, -1 , "");
+:};
 
-bloque ::= OPEN_BLOCK  sentencias CLOSE_BLOCK
-         | OPEN_BLOCK argumentos CLOSE_BLOCK;
+bloque ::= OPEN_BLOCK: o sentencias CLOSE_BLOCK: c
+       | OPEN_BLOCK argumentos: args CLOSE_BLOCK {: RESULT = args; :};
 
 tipos ::= INTEGER {: RESULT = TipoDatos.valueOf("INTEGER") ;:}
         | FLOAT {: RESULT = TipoDatos.valueOf("FLOAT"); :}
@@ -165,22 +229,19 @@ sentencia ::= creacion
             | llamadaFuncionCompleta;
 
 creacion ::= tipos: tipo IDENTIFIER: nombre END_STATEMENT {:
-    tablaSimbolos.addToSymbolTable(tipo.toString(), (String) nombre, null);
+    tablaSimbolos.addToSymbolTable(tipo.toString(), "VARIABLE", (String) nombre, null, -1 , "");
 :};
 
 creacionAsign ::= tipos: tipo IDENTIFIER: nombre ASSIGN expression: valor END_STATEMENT {:
-    System.out.println("Nombre: " + nombre + " Tipo variable: " + valor.getClass().getName());
-    tablaSimbolos.addToSymbolTable(tipo.toString(), (String) nombre, (Symbol) valor);
+    tablaSimbolos.addToSymbolTable(tipo.toString(), "VARIABLE", (String) nombre, (Symbol) valor, -1 , "");
 :};
-////////////////////////////////////////
-//Asignacion con los operadores unarios duda
-///////////////////////////////////////////
+
 asignacion ::= IDENTIFIER: nombre ASSIGN expression: valor END_STATEMENT {:
     verificarAsignacion(nombre.toString(), (Symbol) valor);
 :};
 
 asignacionFor ::= IDENTIFIER: nombre ASSIGN expression: valor {:
-    tablaSimbolos.addToSymbolTable("INTEGER", (String) nombre, (Symbol) valor);
+    tablaSimbolos.addToSymbolTable("INTEGER", "VARIABLE", (String) nombre, (Symbol) valor, -1 , "");
 :};
 
 literales ::= INT_LITERAL:i {:
@@ -204,13 +265,23 @@ literales ::= INT_LITERAL:i {:
     RESULT = symbol;
 :};
 
-creacionAsignArreglo ::= tipos IDENTIFIER OPEN_BRACKET expression CLOSE_BRACKET END_STATEMENT
-          | tipos IDENTIFIER OPEN_BRACKET expression CLOSE_BRACKET ASSIGN bloque END_STATEMENT;
+creacionAsignArreglo ::= tipos: tipo IDENTIFIER: nombre OPEN_BRACKET expression: size CLOSE_BRACKET END_STATEMENT {:
+    int arraySize = (Integer) ((Symbol) size).value;
+    tablaSimbolos.addToSymbolTable(tipo.toString(), "ARRAY", (String) nombre, null, arraySize, "");
+:}
+                       | tipos: tipo IDENTIFIER: nombre OPEN_BRACKET expression: size CLOSE_BRACKET ASSIGN bloque: valores END_STATEMENT {:
+    int arraySize = (Integer) ((Symbol) size).value;
+    tablaSimbolos.addToSymbolTable(tipo.toString(), "ARRAY", (String) nombre, (Symbol) valores, arraySize, "");
+:};
 
-accesoArreglo ::= IDENTIFIER OPEN_BRACKET expression CLOSE_BRACKET;
+asignacionArreglo ::= IDENTIFIER: nombre OPEN_BRACKET expression: e1 CLOSE_BRACKET ASSIGN expression: e2 END_STATEMENT {:
+    verificarAsignacionElementoArreglo((String) nombre, (Symbol) e1, (Symbol) e2);
+:}
+                    | IDENTIFIER: nombre ASSIGN bloque: b END_STATEMENT {:
+    verificarAsignacionArregloCompleto((String) nombre, (Symbol) b);
+:};
 
-asignacionArreglo ::= accesoArreglo ASSIGN expression END_STATEMENT
-                    | IDENTIFIER OPEN_BRACKET CLOSE_BRACKET ASSIGN bloque END_STATEMENT;
+accesoArreglo ::= IDENTIFIER: nombre OPEN_BRACKET expression: e CLOSE_BRACKET {: RESULT = tablaSimbolos.obtenerValorArreglo((String) nombre, (Symbol) e);:};
 
 returnStatement ::= RETURN expression END_STATEMENT
                  | RETURN END_STATEMENT;
@@ -222,8 +293,16 @@ llamadaFuncion ::= IDENTIFIER OPEN_PAREN argumentos CLOSE_PAREN
 
 llamadaFuncionCompleta ::= llamadaFuncion END_STATEMENT;
 
-argumentos ::= expression
-             | argumentos COMMA expression;
+argumentos ::= expression: e {:
+    List<Object> argumentosList = new ArrayList<>();
+    argumentosList.add(((Symbol) e).value);
+    RESULT = new Symbol(-1, argumentosList);
+:}
+             | argumentos: args COMMA expression: e {:
+    List<Object> argumentosList = (List<Object>) ((Symbol) args).value;
+    argumentosList.add(((Symbol) e).value);
+    RESULT = new Symbol(-1, argumentosList);
+:};
 
 estructuraControl ::= ifElse
                     | while
@@ -267,81 +346,80 @@ expressionUnaria ::= termino: t {:RESULT = t;:}
                    | termino: t operadorUnario: ou {: RESULT = FuncionesOperadores.combinarExpresionUnaria( (Symbol) t, (Symbol) ou, false); :}
                    | operadorUnario: ou termino: t  {: RESULT = FuncionesOperadores.combinarExpresionUnaria( (Symbol) t, (Symbol) ou, true); :};
 
-termino ::= IDENTIFIER: i {: RESULT = tablaSimbolos.obtenerValor(new Symbol (-1, i))
-;:}
+termino ::= IDENTIFIER: i {: RESULT = tablaSimbolos.obtenerValor(new Symbol (-1, i));:}
           | literales: l {:RESULT = l;:}
           | llamadaFuncion
-          | accesoArreglo
+          | accesoArreglo: aa {: RESULT = aa; :}
           | OPEN_PAREN expression: e CLOSE_PAREN {: RESULT = e; :};
 
 operadorAritmetico ::= PLUS {:
-    tablaSimbolos.addToSymbolTable("OperadorAritmetico", "+", null);
+    tablaSimbolos.addToSymbolTable("OperadorAritmetico", "OPERADOR", "+", null, -1 , "");
     RESULT = new Symbol(-1, "+");
 :}
                      | MINUS {:
-    tablaSimbolos.addToSymbolTable("OperadorAritmetico", "-", null);
+    tablaSimbolos.addToSymbolTable("OperadorAritmetico", "OPERADOR", "-", null, -1 , "");
     RESULT = new Symbol(-1, "-");
 :}
                      | MULTIPLY {:
-    tablaSimbolos.addToSymbolTable("OperadorAritmetico", "*", null);
+    tablaSimbolos.addToSymbolTable("OperadorAritmetico", "OPERADOR", "*", null, -1 , "");
     RESULT = new Symbol(-1, "*");
 :}
                      | DIVIDE {:
-    tablaSimbolos.addToSymbolTable("OperadorAritmetico", "/", null);
+    tablaSimbolos.addToSymbolTable("OperadorAritmetico", "OPERADOR", "/", null, -1 , "");
     RESULT = new Symbol(-1, "/");
 :}
                      | MODULO {:
-    tablaSimbolos.addToSymbolTable("OperadorAritmetico", "%", null);
+    tablaSimbolos.addToSymbolTable("OperadorAritmetico", "OPERADOR", "%", null, -1 , "");
     RESULT = new Symbol(-1, "%");
 :}
                      | POWER {:
-    tablaSimbolos.addToSymbolTable("OperadorAritmetico", "**", null);
+    tablaSimbolos.addToSymbolTable("OperadorAritmetico", "OPERADOR", "**", null, -1 , "");
     RESULT = new Symbol(-1, "**");
 :};
 
 operadorRelacional ::= LESS_THAN {:
-    tablaSimbolos.addToSymbolTable("OperadorRelacional", "<", null);
+    tablaSimbolos.addToSymbolTable("OperadorRelacional", "OPERADOR", "<", null, -1 , "");
     RESULT = new Symbol(-1, "<");
 :}
                      | LESS_EQUAL {:
-    tablaSimbolos.addToSymbolTable("OperadorRelacional", "<=", null);
+    tablaSimbolos.addToSymbolTable("OperadorRelacional", "OPERADOR", "<=", null, -1 , "");
     RESULT = new Symbol(-1, "<=");
 :}
                      | GREATER_THAN {:
-    tablaSimbolos.addToSymbolTable("OperadorRelacional", ">", null);
+    tablaSimbolos.addToSymbolTable("OperadorRelacional", "OPERADOR", ">", null, -1 , "");
     RESULT = new Symbol(-1, ">");
 :}
                      | GREATER_EQUAL {:
-    tablaSimbolos.addToSymbolTable("OperadorRelacional", ">=", null);
+    tablaSimbolos.addToSymbolTable("OperadorRelacional", "OPERADOR",">=", null, -1 , "");
     RESULT = new Symbol(-1, ">=");
 :}
                      | EQUAL {:
-    tablaSimbolos.addToSymbolTable("OperadorRelacional", "==", null);
+    tablaSimbolos.addToSymbolTable("OperadorRelacional", "OPERADOR", "==", null, -1 , "");
     RESULT = new Symbol(-1, "==");
 :}
                      | NOT_EQUAL {:
-    tablaSimbolos.addToSymbolTable("OperadorRelacional", "!=", null);
+    tablaSimbolos.addToSymbolTable("OperadorRelacional", "OPERADOR", "!=", null, -1 , "");
     RESULT = new Symbol(-1, "!=");
 :};
 
 operadorLogico ::= AND {:
-    tablaSimbolos.addToSymbolTable("OperadorLogico", "&&", null);
+    tablaSimbolos.addToSymbolTable("OperadorLogico", "OPERADOR", "&&", null, -1 , "");
     RESULT = new Symbol(-1, "&&");
 :}
                  | OR {:
-    tablaSimbolos.addToSymbolTable("OperadorLogico", "||", null);
+    tablaSimbolos.addToSymbolTable("OperadorLogico", "OPERADOR", "||", null, -1 , "");
     RESULT = new Symbol(-1, "||");
 :};
 
 operadorUnario ::= INCREMENT {:
-    tablaSimbolos.addToSymbolTable("OperadorUnario", "++", null);
+    tablaSimbolos.addToSymbolTable("OperadorUnario", "OPERADOR", "++", null, -1 , "");
     RESULT = new Symbol(-1, "++");
 :}
                  | DECREMENT {:
-    tablaSimbolos.addToSymbolTable("OperadorUnario", "--", null);
+    tablaSimbolos.addToSymbolTable("OperadorUnario","OPERADOR", "--", null, -1 , "");
     RESULT = new Symbol(-1, "--");
 :}
                  | NOT {:
-    tablaSimbolos.addToSymbolTable("OperadorLogico", "!", null);
+    tablaSimbolos.addToSymbolTable("OperadorLogico", "OPERADOR", "!", null, -1 , "");
     RESULT = new Symbol(-1,"!");
 :};

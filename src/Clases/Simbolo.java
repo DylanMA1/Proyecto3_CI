@@ -1,25 +1,41 @@
 package Clases;
 
+
 public class Simbolo {
 
     protected String tipo;
+    protected String tipoToken;
     protected String nombre;
+    protected Integer arraySize;
+    protected String ambito;
     protected Object valor;
 
     public Simbolo(){
-        tipo = "";
+        tipo = null;
+        tipoToken = null;
         nombre = "";
         valor = null;
+        arraySize = 0;
+        ambito = "";
     }
 
-    public Simbolo(String tipo, String nombre, Object valor){
+    public Simbolo(String tipo, String tipoToken, String nombre, Object valor, Integer arraySize, String ambito){
         this.tipo = tipo;
+        this.tipoToken = tipoToken;
         this.nombre = nombre;
         this.valor = valor;
+        this.arraySize = arraySize;
+        this.ambito = ambito;
     }
+
+
 
     public String getTipo() {
         return tipo;
+    }
+
+    public String getTipoToken() {
+        return tipoToken;
     }
 
     public String getNombre() {
@@ -29,17 +45,15 @@ public class Simbolo {
     public Object getValor() {
         return valor;
     }
-
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
+    public Integer getArraySize() {
+        return arraySize;
     }
 
-    public void setValor(Object valor) {
-        this.valor = valor;
+    public String getAmbito() {
+        return ambito;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setAmbito(String ambito) {
+        this.ambito = ambito;
     }
 }
