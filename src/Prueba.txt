@@ -15,7 +15,7 @@ abrecuento
     rodolfo _lit_ entrega 2 finregalo
 
     cupido _arr_ abreempaque _lit_ cierraempaque entrega abrecuento 'c','d' cierracuento finregalo
-    _arr_ abreempaque _lit_ cierraempaque entrega 'c' finregalo
+    _arr_ abreempaque _lit_ intercambio 1 cierraempaque entrega 'c' finregalo
 
     trueno _mibool_ entrega true finregalo
     _mibool_ entrega abreregalo 3.7 nochebuena _fl1_ quien cierraregalo snowball 56 melchor true finregalo
@@ -24,27 +24,13 @@ abrecuento
     abrecuento
 
         bromista _var2_ entrega 10.0 finregalo
-
-        envuelve abreregalo _var2_ minstix 12.2 gaspar abreregalo 34 navidad 33 cierraregalo minstix 12 cierraregalo
-        abrecuento
-
-            rodolfo _var_ entrega 1 finregalo
-            _var_ entrega _var_ intercambio 1 finregalo
-
-            envia finregalo
-        cierracuento
-
-        elfo abreregalo _var_ mary 0 cierraregalo
-        abrecuento
-            envia finregalo
-        cierracuento
-        hada
-        abrecuento
-            envia finregalo
-        cierracuento
-
         rodolfo _ch_ entrega 2 finregalo
         rodolfo _id_ entrega 1 finregalo
+
+        elfo abreregalo _fl1_ mary 1 cierraregalo
+        abrecuento
+            cupido _miChar2222_ entrega 'a' finregalo
+        cierracuento
 
         varios abreregalo _ch_ cierraregalo
         abrecuento
@@ -56,22 +42,29 @@ abrecuento
     envia 1 finregalo
 cierracuento
 
-_verano_ abreregalo cierraregalo abrecuento
+rodolfo _miFunc2_ abreregalo rodolfo _x9_ cierraregalo
+abrecuento
+    rodolfo _lit2_ entrega 2 finregalo
+    envia 1 finregalo
+cierracuento
 
-\_
-Comentario 1
-_/
+_verano_ abreregalo cierraregalo
+abrecuento
 
-cometa _s1_ entrega "Hola mundo" finregalo
-cometa _b1_ entrega "Lololololo" finregalo
-cometa _bl1_ entrega "Lololololo222" finregalo
+    \_
+    Comentario 1
+    _/
+    _lit_ entrega 2 finregalo
+    cometa _s1_ entrega "Hola mundo" finregalo
+    cometa _b1_ entrega "Lololololo" finregalo
+    cometa _bl1_ entrega "Lololololo222" finregalo
 
-escucha abreregalo _s1_ cierraregalo finregalo
+    escucha abreregalo _s1_ cierraregalo finregalo
 
-narra abreregalo _b1_ cierraregalo finregalo
+    narra abreregalo _b1_ cierraregalo finregalo
 
-_miFunc_ abreregalo _miFunc_ abreregalo cierraregalo ,'a' cierraregalo finregalo
+    # _miFunc_ abreregalo _miFunc2_ abreregalo cierraregalo ,'a' cierraregalo finregalo
 
-envia _bl1_ finregalo
+    envia _bl1_ finregalo
 
 cierracuento

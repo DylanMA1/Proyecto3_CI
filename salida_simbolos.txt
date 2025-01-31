@@ -1,34 +1,39 @@
-------------------------------------------------------------------------------------------------------
-| Nombre          | Tipo                      | Valor                                    |
-------------------------------------------------------------------------------------------------------
-| _miChar_        | CHAR                      | !                                        |
-| _str1_          | STRING                    | Hola $%&/gaspar$& cierraregalo mundo     |
-| _fl1_           | FLOAT                     | 56.6                                     |
-| _lit_           | INTEGER                   | 2                                        |
-| _mibool_        | BOOL                      | true                                     |
-| *               | OperadorAritmetico        | null                                     |
-| ++              | OperadorUnario            | null                                     |
-| <               | OperadorRelacional        | null                                     |
-| &&              | OperadorLogico            | null                                     |
-| _i_             | INTEGER                   | 10                                       |
-| <               | OperadorRelacional        | null                                     |
-| *               | OperadorAritmetico        | null                                     |
-| ++              | OperadorUnario            | null                                     |
-| _var2_          | FLOAT                     | 10.0                                     |
-| >               | OperadorRelacional        | null                                     |
-| ||              | OperadorLogico            | null                                     |
-| +               | OperadorAritmetico        | null                                     |
-| >               | OperadorRelacional        | null                                     |
-| _var_           | INTEGER                   | 1                                        |
-| -               | OperadorAritmetico        | null                                     |
-| ==              | OperadorRelacional        | null                                     |
-| _ch_            | INTEGER                   | 2                                        |
-| _id_            | INTEGER                   | 1                                        |
-| ++              | OperadorUnario            | null                                     |
-| --              | OperadorUnario            | null                                     |
-| <=              | OperadorRelacional        | null                                     |
-| _func1_         | FLOAT                     | null                                     |
-| _s1_            | STRING                    | Hola mundo                               |
-| _b1_            | STRING                    | Lololololo                               |
-| _bl1_           | STRING                    | Lololololo222                            |
----------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Nombre          | Tipo token                | Tipo                      | Valor                                    | Tamaño     | Scope      | Ambito     |
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+| _x22_           | PARAMETER                 | CHAR                      | null                                     | N/A        | 0          | _func1_    |
+| _miChar_        | VARIABLE                  | CHAR                      | !                                        | N/A        | 1          | _func1_    |
+| _str1_          | VARIABLE                  | STRING                    | Hola $%&/gaspar$& cierraregalo mundo     | N/A        | 1          | _func1_    |
+| _fl1_           | VARIABLE                  | FLOAT                     | 56.6                                     | N/A        | 1          | _func1_    |
+| _lit_           | VARIABLE                  | INTEGER                   | 2                                        | N/A        | 1          | _func1_    |
+| _arr_           | ARRAY                     | CHAR                      | [c, d]                                   | 2          | 1          | _func1_    |
+| -               | OPERADOR                  | OperadorAritmetico        | null                                     | N/A        | 1          | _func1_    |
+| _mibool_        | VARIABLE                  | BOOL                      | true                                     | N/A        | 1          | _func1_    |
+| *               | OPERADOR                  | OperadorAritmetico        | null                                     | N/A        | 1          | _func1_    |
+| ++              | OPERADOR                  | OperadorUnario            | null                                     | N/A        | 1          | _func1_    |
+| <               | OPERADOR                  | OperadorRelacional        | null                                     | N/A        | 1          | _func1_    |
+| &&              | OPERADOR                  | OperadorLogico            | null                                     | N/A        | 1          | _func1_    |
+| _i_             | VARIABLE                  | INTEGER                   | 10                                       | N/A        | 1          | _func1_    |
+| <               | OPERADOR                  | OperadorRelacional        | null                                     | N/A        | 1          | _func1_    |
+| *               | OPERADOR                  | OperadorAritmetico        | null                                     | N/A        | 1          | _func1_    |
+| ++              | OPERADOR                  | OperadorUnario            | null                                     | N/A        | 1          | _func1_    |
+| _var2_          | VARIABLE                  | FLOAT                     | 10.0                                     | N/A        | 2          | _func1_    |
+| _ch_            | VARIABLE                  | INTEGER                   | 2                                        | N/A        | 2          | _func1_    |
+| _id_            | VARIABLE                  | INTEGER                   | 1                                        | N/A        | 2          | _func1_    |
+| ==              | OPERADOR                  | OperadorRelacional        | null                                     | N/A        | 2          | _func1_    |
+| _miChar2222_    | VARIABLE                  | CHAR                      | a                                        | N/A        | 3          | _func1_    |
+| ++              | OPERADOR                  | OperadorUnario            | null                                     | N/A        | 2          | _func1_    |
+| --              | OPERADOR                  | OperadorUnario            | null                                     | N/A        | 2          | _func1_    |
+| <=              | OPERADOR                  | OperadorRelacional        | null                                     | N/A        | 2          | _func1_    |
+| return1         | RETURN                    | INTEGER                   | 1                                        | N/A        | 1          | _func1_    |
+| _func1_         | FUNCTION                  | FLOAT                     | null                                     | N/A        | 0          |            |
+| _x9_            | PARAMETER                 | INTEGER                   | null                                     | N/A        | 0          | _miFunc2_  |
+| _lit2_          | VARIABLE                  | INTEGER                   | 2                                        | N/A        | 1          | _miFunc2_  |
+| return2         | RETURN                    | INTEGER                   | 1                                        | N/A        | 1          | _miFunc2_  |
+| _miFunc2_       | FUNCTION                  | INTEGER                   | null                                     | N/A        | 0          |            |
+| _s1_            | VARIABLE                  | STRING                    | Hola mundo                               | N/A        | 1          | _verano_   |
+| _b1_            | VARIABLE                  | STRING                    | Lololololo                               | N/A        | 1          | _verano_   |
+| _bl1_           | VARIABLE                  | STRING                    | Lololololo222                            | N/A        | 1          | _verano_   |
+| return3         | RETURN                    | STRING                    | Lololololo222                            | N/A        | 1          | _verano_   |
+| _verano_        | FUNCTION                  | UNDEFINED                 | null                                     | N/A        | 0          |            |
+-------------------------------------------------------------------------------------------------------------------------------------------------------------

@@ -12,8 +12,14 @@ import JFLEX.Lexer;
 import CUP.sym;
 import jflex.exceptions.SilentExit;
 
+/**
+ * Clase principal para ejecución del programa
+ */
 public class Main {
 
+    /**
+     * Clase principal del programa
+     */
     public static void main(String[] args) throws SilentExit {
         InputStream originalIn = System.in;
 
@@ -76,11 +82,6 @@ public class Main {
                 }
             }
 
-            // Escribir la tabla de símbolos en el archivo de salida
-            for (Simbolo simbolo : parser.tablaSimbolos.getEntries()) {
-                simbolosWriter.write(simbolo.toString());
-                simbolosWriter.newLine();
-            }
 
             validateSyntax(archivo);
 
@@ -91,6 +92,10 @@ public class Main {
         }
     }
 
+    /**
+     * Valida la sintaxis del archivo utilizando el parser.
+     * @param filePath Ruta del archivo a analizar
+     */
     private static void validateSyntax(String filePath) {
         try (FileReader reader = new FileReader(filePath)) {
             Lexer lexer = new Lexer(reader);
@@ -104,6 +109,11 @@ public class Main {
         }
     }
 
+    /**
+     * Obtiene el tipo de dato correspondiente al símbolo del token.
+     * @param sym El símbolo del token
+     * @return El tipo de dato asociado al token
+     */
     private static TipoDatos getTokenType(int sym) {
         switch (sym) {
             case CUP.sym.INTEGER:
@@ -123,6 +133,10 @@ public class Main {
         }
     }
 
+    /**
+     * Genera el archivo de parser a partir del archivo especificado.
+     * @param inputFile Ruta del archivo .cup que contiene la gramática del parser
+     */
     public static void generarParser(String inputFile) {
         try {
             String[] archivoEntrada = {
@@ -139,6 +153,11 @@ public class Main {
         }
     }
 
+    /**
+     * Genera el archivo de lexer a partir del archivo especificado.
+     * @param inputFile Ruta del archivo .jflex que contiene la definición del lexer
+     * @throws SilentExit Si ocurre un error en la generación del lexer
+     */
     public static void generarLexer(String inputFile) throws SilentExit {
         String[] archivoEntrada = { inputFile };
         jflex.Main.generate(archivoEntrada);
@@ -147,11 +166,19 @@ public class Main {
 
     /**
      * Clase para redirigir la salida a múltiples flujos.
+     * <p>
+     * Esta clase permite redirigir la salida estándar tanto a la consola como a un archivo.
+     * </p>
      */
     static class MultiOutputStream extends OutputStream {
         private final OutputStream console;
         private final Writer fileWriter;
 
+        /**
+         * Constructor para inicializar los flujos de salida.
+         * @param console El flujo de salida para la consola
+         * @param fileWriter El flujo de salida para el archivo
+         */
         public MultiOutputStream(OutputStream console, Writer fileWriter) {
             this.console = console;
             this.fileWriter = fileWriter;
@@ -181,5 +208,4 @@ public class Main {
             fileWriter.close();
         }
     }
-
 }

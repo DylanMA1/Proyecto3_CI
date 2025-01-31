@@ -13,9 +13,11 @@ import java_cup.runtime.Symbol;
 public class TablaSimbolos {
 
     private ArrayList<Simbolo> tablaSimbolos;
+    private int nivelScopeActual;
 
     public TablaSimbolos() {
         tablaSimbolos = new ArrayList<>();
+        nivelScopeActual = 0;
     }
 
     /**
@@ -25,11 +27,12 @@ public class TablaSimbolos {
      * @param tokenName El nombre del token.
      * @param valor      El tipo asociado (si es aplicable, ej. variables o funciones).
      */
-    public void addToSymbolTable(String type, String tokenType, String tokenName, Symbol valor, int tamanoArreglo, String ambito) {
+
+    public void addToSymbolTable(String type, String tokenType, String tokenName, Symbol valor, int tamanoArreglo) {
         Object valorObject = (valor != null && valor.value != null) ? valor.value : "null";
 
         // Crear el símbolo con el nivel de scope actual
-        Simbolo simbolo = new Simbolo(type, tokenType, tokenName, valorObject, tamanoArreglo, ambito);
+        Simbolo simbolo = new Simbolo(type, tokenType, tokenName, valorObject, tamanoArreglo, nivelScopeActual, "");
 
         // Manejo de operadores: se permite agregar duplicados si son operadores
         if (type.equals("OperadorAritmetico") || type.equals("OperadorRelacional") || type.equals("OperadorLogico") || type.equals("OperadorUnario")) {
@@ -37,11 +40,58 @@ public class TablaSimbolos {
             return;
         }
 
-        if (!exists(tokenName)) {
             tablaSimbolos.add(simbolo);
-        } else {
-            throw new RuntimeException("Error semántico: El símbolo '" + tokenName + "' ya existe en este scope.");
+
+    }
+
+    /**
+     * Comprueba si un símbolo con un nombre específico ya existe en el scope actual.
+     *
+     * @param nombre El nombre del símbolo a buscar.
+     * @return True si existe en el scope actual, de lo contrario False.
+     */
+    public boolean existsInCurrentScope(String nombre) {
+        for (Simbolo simbolo : tablaSimbolos) {
+            if (simbolo.getNombre().equals(nombre) && simbolo.getScope() == nivelScopeActual) {
+                return true;
+            }
         }
+        return false;
+    }
+
+    /**
+     * Abre un nuevo scope.
+     *
+     * @param tokenOpenBlock El token que representa la apertura del bloque (OPEN_BLOCK).
+     */
+    public void abrirScope(Symbol tokenOpenBlock) {
+        nivelScopeActual++;
+        System.out.println("Scope abierto. Nivel actual: " + nivelScopeActual);
+    }
+
+    /**
+     * Cierra el scope actual.
+     *
+     * @param tokenCloseBlock El token que representa el cierre del bloque (CLOSE_BLOCK).
+     */
+    public void cerrarScope(Symbol tokenCloseBlock) {
+        if (nivelScopeActual > 0) { // No cerrar el scope global
+            //System.out.println("Intentando cerrar scope. Nivel actual antes de cerrar: " + nivelScopeActual);
+            //tablaSimbolos.removeIf(simbolo -> simbolo.getScope() == nivelScopeActual);
+            nivelScopeActual--;
+            System.out.println("Scope cerrado. Nivel actual: " + nivelScopeActual);
+        } else {
+            System.out.println("Error: intento de cerrar scope global");
+        }
+    }
+
+    /**
+     * Revisa el nivel del scope actual.
+     *
+     * Se usa en depuración del scope en la tabla de símbolos.
+     */
+    public int getNivelScopeActual() {
+        return nivelScopeActual;
     }
 
     /**
@@ -52,6 +102,33 @@ public class TablaSimbolos {
      */
     public boolean exists(String nombre) {
         return tablaSimbolos.stream().anyMatch(s -> s.getNombre().equals(nombre));
+    }
+
+    /**
+     * Asigna el ámbito a las variables basándose en la posición de las funciones.
+     * Recorre la tabla de símbolos y asigna el nombre de la función como ámbito
+     * a todas las variables que estén antes de la función. Se detiene si encuentra
+     * otra función o llega al final/inicio de la lista.
+     */
+    public void asignarAmbito() {
+        String ambitoActual;
+        Simbolo simbolo;
+
+        for (int i = 0; i < tablaSimbolos.size(); i++) {
+            simbolo = tablaSimbolos.get(i);
+            if (simbolo.getTipoToken().equals("FUNCTION")) {
+                ambitoActual = simbolo.getNombre();
+                for (int x = i - 1; i < tablaSimbolos.size(); x--) {
+                    simbolo = tablaSimbolos.get(x);
+                    if (!(simbolo.getTipoToken().equals("FUNCTION")))  {
+                        simbolo.setAmbito(ambitoActual);
+                    }
+                    if (x == 0 || simbolo.getTipoToken().equals("FUNCTION")) {
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -145,35 +222,6 @@ public class TablaSimbolos {
     }
 
     /**
-     * Asigna el ámbito a las variables basándose en la posición de las funciones.
-     * Recorre la tabla de símbolos y asigna el nombre de la función como ámbito
-     * a todas las variables que estén antes de la función. Se detiene si encuentra
-     * otra función o llega al final/inicio de la lista.
-     */
-    public void asignarAmbito() {
-        String ambitoActual = "Global"; // Ámbito inicial
-        for (int i = 0; i < tablaSimbolos.size(); i++) {
-            Simbolo simbolo = tablaSimbolos.get(i);
-
-            // Si el símbolo es una función, actualizamos el ámbito actual
-            if (simbolo.getTipoToken().equals("FUNCTION")) {
-                ambitoActual = simbolo.getNombre(); // El ámbito ahora es el nombre de la función
-                for (int i2 = i - 1; i < tablaSimbolos.size(); i2--) {
-                    simbolo = tablaSimbolos.get(i2);
-                    if (simbolo.getTipoToken().equals("VARIABLE") || simbolo.getTipoToken().equals("PARAMETER")) {
-                        simbolo.setAmbito(ambitoActual);
-                    }
-                    System.out.println(i2);
-                    if (i2 == 0 || simbolo.getTipoToken().equals("FUNCTION")) {
-                        break;
-                    }
-                }
-            }
-
-        }
-    }
-
-    /**
      * Comprueba si dos tipos de datos son compatibles.
      *
      * @param tipo1 El primer tipo.
@@ -191,24 +239,25 @@ public class TablaSimbolos {
         String archivoSimbolos = "salida_simbolos.txt";
         try (BufferedWriter simbolosWriter = new BufferedWriter(new FileWriter(archivoSimbolos, false))) {
             System.out.println("------------------------------------------------------------------------------------------------------");
-            simbolosWriter.write("-------------------------------------------------------------------------------------------------------\n");
-            simbolosWriter.write(String.format("| %-15s | %-25s | %-25s | %-40s | %-10s |%n", "Nombre", "Tipo token", "Tipo", "Valor", "Tamaño"));
-            simbolosWriter.write("-------------------------------------------------------------------------------------------------------\n");
+            simbolosWriter.write("-------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+            simbolosWriter.write(String.format("| %-15s | %-25s | %-25s | %-40s | %-10s | %-10s | %-10s |%n", "Nombre", "Tipo token", "Tipo", "Valor", "Tamaño", "Scope", "Ambito"));
+            simbolosWriter.write("-------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
 
             for (Simbolo simbolo : tablaSimbolos) {
-                String linea = String.format("| %-15s | %-25s | %-25s | %-40s | %-10s | %-10s |%n",
+                String linea = String.format("| %-15s | %-25s | %-25s | %-40s | %-10s | %-10s | %-10s |%n",
                         simbolo.getNombre(),
                         simbolo.getTipoToken(),
                         simbolo.getTipo(),
                         simbolo.getValor(),
                         (simbolo.getArraySize() != -1) ? simbolo.getArraySize() : "N/A",
+                        simbolo.getScope(),
                         simbolo.getAmbito()
                 );
                 System.out.print(linea); // Imprime en consola
                 simbolosWriter.write(linea); // Escribe en el archivo
             }
 
-            simbolosWriter.write("-------------------------------------------------------------------------------------------------------\n");
+            simbolosWriter.write("-------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
             System.out.println("--------------------------------------------------------------------------------------------------------");
         } catch (IOException e) {
             System.err.println("Error al escribir la tabla de símbolos en el archivo: " + e.getMessage());
