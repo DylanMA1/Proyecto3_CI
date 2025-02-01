@@ -27,21 +27,46 @@ public class TablaSimbolos {
      * @param tokenName El nombre del token.
      * @param valor      El tipo asociado (si es aplicable, ej. variables o funciones).
      */
-
     public void addToSymbolTable(String type, String tokenType, String tokenName, Symbol valor, int tamanoArreglo) {
         Object valorObject = (valor != null && valor.value != null) ? valor.value : "null";
+        String ambitoActual = obtenerAmbitoActual();
 
-        // Crear el símbolo con el nivel de scope actual
-        Simbolo simbolo = new Simbolo(type, tokenType, tokenName, valorObject, tamanoArreglo, nivelScopeActual, "");
-
-        // Manejo de operadores: se permite agregar duplicados si son operadores
-        if (type.equals("OperadorAritmetico") || type.equals("OperadorRelacional") || type.equals("OperadorLogico") || type.equals("OperadorUnario")) {
-            tablaSimbolos.add(simbolo);
+        if (tokenType.equals("OPERADOR")){
             return;
         }
 
-            tablaSimbolos.add(simbolo);
+        if (existeEnAmbito(ambitoActual, tokenName)) {
+            System.err.println("Error semántico: La variable '" + tokenName + "' ya está declarada en el mismo ámbito");
+            return;
+        }
 
+        Simbolo simbolo = new Simbolo(type, tokenType, tokenName, valorObject, tamanoArreglo, nivelScopeActual, ambitoActual);
+        tablaSimbolos.add(simbolo);
+    }
+
+    /**
+     * Verifica si una variable con el mismo nombre ya está en el ámbito actual.
+     */
+    public boolean existeEnAmbito(String ambito, String nombre) {
+        for (Simbolo simbolo : tablaSimbolos) {
+            if (simbolo.getNombre().equals(nombre) && simbolo.getAmbito().equals(ambito)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Obtiene el ámbito actual basado en la función en la que está la variable.
+     */
+    public String obtenerAmbitoActual() {
+        for (int i = tablaSimbolos.size() - 1; i >= 0; i--) {
+            Simbolo simbolo = tablaSimbolos.get(i);
+            if (simbolo.getTipoToken().equals("FUNCTION")) {
+                return simbolo.getNombre();
+            }
+        }
+        return "global";
     }
 
     /**
@@ -66,7 +91,6 @@ public class TablaSimbolos {
      */
     public void abrirScope(Symbol tokenOpenBlock) {
         nivelScopeActual++;
-        System.out.println("Scope abierto. Nivel actual: " + nivelScopeActual);
     }
 
     /**
@@ -79,7 +103,6 @@ public class TablaSimbolos {
             //System.out.println("Intentando cerrar scope. Nivel actual antes de cerrar: " + nivelScopeActual);
             //tablaSimbolos.removeIf(simbolo -> simbolo.getScope() == nivelScopeActual);
             nivelScopeActual--;
-            System.out.println("Scope cerrado. Nivel actual: " + nivelScopeActual);
         } else {
             System.out.println("Error: intento de cerrar scope global");
         }
@@ -182,6 +205,46 @@ public class TablaSimbolos {
         return nombre;
     }
 
+    public Symbol obtenerTipoRetornoFuncion(Symbol Funcion) {
+        String nombreFuncion = Funcion.value.toString();
+        Simbolo simbolo;
+
+        for (int i = 0; i < tablaSimbolos.size(); i++) {
+            simbolo = tablaSimbolos.get(i);
+            if (simbolo.getNombre().equals(nombreFuncion)) {
+                return new Symbol(-1, simbolo.getTipo());
+            }
+        }
+        System.err.println("Error semántico: funcion '" + nombreFuncion + "' no declarada.");
+        return null;
+    }
+
+    public List<String> obtenerTipoParametrosFuncion (Symbol Funcion) {
+        String nombreFuncion = Funcion.value.toString();
+        Simbolo simbolo;
+        List<String> listaTipoParametros = new ArrayList<>();
+
+        for (int i = 0; i < tablaSimbolos.size(); i++) {
+            simbolo = tablaSimbolos.get(i);
+
+            if (simbolo.getNombre().equals(nombreFuncion)) {
+
+                for (int x = i - 1; i < tablaSimbolos.size(); x--) {
+                    simbolo = tablaSimbolos.get(x);
+
+                    if (simbolo.getTipoToken().equals("PARAMETER")) {
+                        listaTipoParametros.add(simbolo.getTipo());
+                    }
+                    if (x == 0 || simbolo.getTipoToken().equals("FUNCTION")) {
+                        break;
+                    }
+                }
+                return listaTipoParametros;
+            }
+        }
+        return listaTipoParametros;
+    }
+
     /**
      * Obtiene el valor de un arreglo en un índice específico.
      *
@@ -219,6 +282,47 @@ public class TablaSimbolos {
         }
         // Si el arreglo no se encuentra, lanzar un error
         throw new RuntimeException("Error semántico: Arreglo '" + nombre + "' no declarado.");
+    }
+
+    public void analisisSemantico() {
+        Simbolo funcion;
+        Simbolo simbolo;
+        boolean hasReturns;
+
+        for (int i = 0; i < tablaSimbolos.size(); i++) {
+            simbolo = tablaSimbolos.get(i);
+
+            if (simbolo.getTipoToken().equals("FUNCTION")) {
+                funcion = simbolo;
+                hasReturns = false;
+
+                for (int x = i - 1; i < tablaSimbolos.size(); x--) {
+                    simbolo = tablaSimbolos.get(x);
+
+                    if (simbolo.getTipoToken().equals("RETURN")) {
+                        hasReturns = true;
+
+                        if (!(simbolo.getAmbito().equals(funcion.getAmbito())) && !(simbolo.getTipo().equals(funcion.getTipo())) && !(funcion.getTipo().equals("UNDEFINED"))) {
+                            System.err.println("Error semántico: la funcion: " + funcion.getNombre() + " de tipo: " + funcion.getTipo() + " no puede devolver un parametro de tipo: " + simbolo.getTipo());
+                            break;
+                        } else if (simbolo.getTipo().equals("VOID")) {
+                            System.err.println("Error semántico: la funcion: " + funcion.getNombre() + " debe devolver un parametro de tipo: " + funcion.getTipo());
+                            break;
+                        } else if (funcion.getTipo().equals("UNDEFINED")) {
+                            System.err.println("Error semántico: la funcion: " + funcion.getNombre() + " no debe devolver ningun parametro");
+                            break;
+                        }
+
+                    } else if (x == 0 || simbolo.getTipoToken().equals("FUNCTION")) {
+                        if (!(funcion.getTipo().equals("UNDEFINED")) && !hasReturns) {
+                            System.err.println("Error semántico: la funcion: " + funcion.getNombre() + " debe devolver un parametro de tipo: " + funcion.getTipo());
+                        }
+                        break;
+                    }
+                }
+            }
+
+        }
     }
 
     /**

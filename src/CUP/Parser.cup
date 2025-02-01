@@ -20,6 +20,12 @@ parser code {:
 
         Object valor = expression.value;
 
+        if (valor instanceof String) {
+            if (((String) valor).equals("INTEGER") || valor.equals("STRING") || valor.equals("BOOL") || valor.equals("FLOAT") || valor.equals("CHAR") || valor.equals("VOID") || valor.equals("UNDEFINED")) {
+                return TipoDatos.valueOf((String) valor);
+            }
+        }
+
         if (valor instanceof Integer) {
             return TipoDatos.INTEGER;
         } else if (valor instanceof Float) {
@@ -31,9 +37,10 @@ parser code {:
         } else if (valor instanceof Character) {
             return TipoDatos.CHAR;
         } else {
-             System.err.println("Error semántico: Tipo de dato no reconocido en la expresión.");
+            System.err.println("Error semántico: Tipo de dato no reconocido en la expresión.");
         }
         return null;
+
     }
 
     public void verificarAsignacion(String nombre, Symbol valor) {
@@ -92,7 +99,7 @@ parser code {:
             throw new RuntimeException("Error semántico: Se esperaba una lista de valores para la asignación del arreglo.");
         }
         List<Object> valores = (List<Object>) valor.value;
-        System.out.println("Valores: " + valores + " Tipo de variable: " + valores.getClass().getName());
+
         // Verificar que el tamaño de la lista coincida con el tamaño del arreglo
         if (valores.size() != tablaSimbolos.searchByName(nombreArreglo).getArraySize()) {
             throw new RuntimeException("Error semántico: El tamaño de la lista no coincide con el tamaño del arreglo '" + nombreArreglo + "'.");
@@ -110,7 +117,7 @@ parser code {:
         }
     }
 
-
+    //Reporte de errores sintacticos
     @Override
     public void syntax_error(Symbol s) {
         System.err.println("Error sintáctico en línea " + (s.left) + ", columna " + (s.right));
@@ -153,7 +160,7 @@ non terminal ifElse, while, for, switch, casos, caso, io, operadorAritmetico, op
 non terminal operadorLogico, operadorUnario, termino;
 non terminal expressionLogica, expressionRelacional, expressionAritmetica, expressionUnaria;
 non terminal asignacionFor, llamadaFuncionCompleta, expressionCompleta;
-non terminal creacionAsignArreglo;
+non terminal creacionArreglo, creacionAsignArreglo;
 non terminal ifElseEncabezado, forEncabezado, whileEncabezado, switchEncabezado;
 non terminal openblock, closeblock;
 
@@ -177,15 +184,19 @@ start with program;
 // Reglas de producción
 program ::= main funciones {:
     tablaSimbolos.asignarAmbito();
+    tablaSimbolos.analisisSemantico();
 :}
           | funciones main {:
     tablaSimbolos.asignarAmbito();
+    tablaSimbolos.analisisSemantico();
 :}
           | funciones {:
     tablaSimbolos.asignarAmbito();
+    tablaSimbolos.analisisSemantico();
 :}
           | main {:
     tablaSimbolos.asignarAmbito();
+    tablaSimbolos.analisisSemantico();
 :}
           | error END_STATEMENT {:
                 System.err.println("Recuperación: Se ignoró el error hasta ';'");
@@ -199,7 +210,7 @@ funcion ::= encabezadoFunc: encabezado bloque: bloque {:
     tablaSimbolos.addToSymbolTable(encabezadoFuncion.tipo.toString(), "FUNCTION", encabezadoFuncion.nombre.toString(), null, -1);
 :};
 
-encabezadoFunc ::= tipos:tipo IDENTIFIER: nombre parametros: params {:
+encabezadoFunc ::= tipos: tipo IDENTIFIER: nombre parametros: params {:
     RESULT = new Funciones.EncabezadoFuncion(tipo, nombre.toString(), params);
 :};
 
@@ -254,6 +265,7 @@ creacion ::= tipos: tipo IDENTIFIER: nombre END_STATEMENT {:
 
 creacionAsign ::= tipos: tipo IDENTIFIER: nombre ASSIGN expression: valor END_STATEMENT {:
     tablaSimbolos.addToSymbolTable(tipo.toString(), "VARIABLE", (String) nombre, (Symbol) valor, -1);
+    verificarAsignacion(nombre.toString(), (Symbol) valor);
 :};
 
 asignacion ::= IDENTIFIER: nombre ASSIGN expression: valor END_STATEMENT {:
@@ -285,13 +297,15 @@ literales ::= INT_LITERAL:i {:
     RESULT = symbol;
 :};
 
-creacionAsignArreglo ::= tipos: tipo IDENTIFIER: nombre OPEN_BRACKET expression: size CLOSE_BRACKET END_STATEMENT {:
+creacionArreglo ::= tipos: tipo IDENTIFIER: nombre OPEN_BRACKET expression: size CLOSE_BRACKET END_STATEMENT {:
     int arraySize = (Integer) ((Symbol) size).value;
     tablaSimbolos.addToSymbolTable(tipo.toString(), "ARRAY", (String) nombre, null, arraySize);
-:}
-                       | tipos: tipo IDENTIFIER: nombre OPEN_BRACKET expression: size CLOSE_BRACKET ASSIGN bloque: valores END_STATEMENT {:
+:};
+
+creacionAsignArreglo ::= tipos: tipo IDENTIFIER: nombre OPEN_BRACKET expression: size CLOSE_BRACKET ASSIGN bloque: valores END_STATEMENT {:
     int arraySize = (Integer) ((Symbol) size).value;
     tablaSimbolos.addToSymbolTable(tipo.toString(), "ARRAY", (String) nombre, (Symbol) valores, arraySize);
+    verificarAsignacionArregloCompleto((String) nombre, (Symbol) valores);
 :};
 
 asignacionArreglo ::= IDENTIFIER: nombre OPEN_BRACKET expression: e1 CLOSE_BRACKET ASSIGN expression: e2 END_STATEMENT {:
@@ -314,8 +328,23 @@ returnStatement ::= RETURN expression: valor END_STATEMENT {:
 
 breakStatement ::= BREAK END_STATEMENT;
 
-llamadaFuncion ::= IDENTIFIER OPEN_PAREN argumentos CLOSE_PAREN
-                 | IDENTIFIER OPEN_PAREN CLOSE_PAREN;
+llamadaFuncion ::= IDENTIFIER: nombre OPEN_PAREN argumentos: a CLOSE_PAREN {:
+    List<String> tipoParametrosFuncion = tablaSimbolos.obtenerTipoParametrosFuncion(new Symbol(-1, nombre));
+    List<Symbol> listaArgumentos = (List<Symbol>) ((Symbol)a).value;
+    //List<TipoDatos> nuevaListaArgumentos = new ArrayList();
+
+    //for (Symbol argumento: listaArgumentos) {
+    //System.out.println(argumento);
+    //    nuevaListaArgumentos.add(obtenerTipoExpresion(argumento));
+    //}
+
+    System.out.println(tipoParametrosFuncion);
+    //System.out.println(nuevaListaArgumentos);
+    RESULT = tablaSimbolos.obtenerTipoRetornoFuncion(new Symbol (-1, nombre));
+:}
+                 | IDENTIFIER: nombre OPEN_PAREN CLOSE_PAREN {:
+    RESULT = tablaSimbolos.obtenerTipoRetornoFuncion(new Symbol (-1, nombre));
+:};
 
 llamadaFuncionCompleta ::= llamadaFuncion END_STATEMENT;
 
@@ -374,7 +403,7 @@ expressionUnaria ::= termino: t {:RESULT = t;:}
 
 termino ::= IDENTIFIER: i {: RESULT = tablaSimbolos.obtenerValor(new Symbol (-1, i));:}
           | literales: l {:RESULT = l;:}
-          | llamadaFuncion
+          | llamadaFuncion: lf {: RESULT = lf; :}
           | accesoArreglo: aa {: RESULT = aa; :}
           | OPEN_PAREN expression: e CLOSE_PAREN {: RESULT = e; :};
 
