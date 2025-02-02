@@ -8,10 +8,8 @@ public class Traductor {
     public String traducir(Parser parser) {
         StringBuilder codigoSalida = new StringBuilder();
 
-        // Generar encabezados si es necesario
         codigoSalida.append("// Código traducido\n\n");
 
-        // Recorrer las funciones y el main
         if (parser.tablaSimbolos != null) {
             for (Simbolo simbolo : parser.tablaSimbolos.getEntries()) {
                 if (simbolo.getTipo().equals("FUNCION")) {

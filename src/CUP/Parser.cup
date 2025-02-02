@@ -12,13 +12,25 @@ parser code {:
     private static int cont = 1;
 
     public TablaSimbolos tablaSimbolos = new TablaSimbolos();
+    public Semantico analisisSemantico = new Semantico(tablaSimbolos);
 
+    /**
+    * Obtiene el tipo de las expresiones en el código.
+    *
+    * @param expression La expression en la gramática.
+    */
     public TipoDatos obtenerTipoExpresion(Symbol expression) {
         if (expression == null) {
              System.err.println("Error semántico: No se puede determinar el tipo de la expresión.");
         }
 
         Object valor = expression.value;
+
+        if (valor instanceof String) {
+            if (((String) valor).equals("INTEGER") || valor.equals("STRING") || valor.equals("BOOL") || valor.equals("FLOAT") || valor.equals("CHAR") || valor.equals("VOID") || valor.equals("UNDEFINED")) {
+                return TipoDatos.valueOf((String) valor);
+            }
+        }
 
         if (valor instanceof Integer) {
             return TipoDatos.INTEGER;
@@ -31,21 +43,84 @@ parser code {:
         } else if (valor instanceof Character) {
             return TipoDatos.CHAR;
         } else {
-             System.err.println("Error semántico: Tipo de dato no reconocido en la expresión.");
+            System.err.println("Error semántico: Tipo de dato no reconocido en la expresión.");
         }
         return null;
+
     }
 
+    /**
+    * Verifica las asignaciones en el código.
+    *
+    * @param nombre El nombre de la funcion.
+    * @param valor Los parametros enviados en la llamada.
+    */
     public void verificarAsignacion(String nombre, Symbol valor) {
-        if (valor.value instanceof List) {
-            verificarAsignacionArregloCompleto(nombre, valor);
+
+            String ambitoActual = tablaSimbolos.obtenerAmbitoActual();
+
+            Simbolo simboloVariable = tablaSimbolos.obtenerSimbolo(nombre);
+
+            if (simboloVariable ==  null) {
+                System.err.println("Error semántico: La variable '" + nombre + "' no está declarada.");
+                return;
+            }
+
+            if (!simboloVariable.getAmbito().equals(ambitoActual)){
+                System.err.println("Error semántico: No se puede asignar un valor a la variable '" + nombre + "' desde un ámbito diferente.");
+                return;
+            }
+
+            if (valor.value instanceof List) {
+                verificarAsignacionArregloCompleto(nombre, valor);
+                return;
+            }
+
+            TipoDatos tipoVariable = tablaSimbolos.obtenerTipo(nombre);
+            TipoDatos tipoValor = obtenerTipoExpresion(valor);
+
+            if (!analisisSemantico.esTipoCompatible(tipoVariable, tipoValor)) {
+                 System.err.println("Error semántico: Tipo incompatible en la asignación a la variable '" + nombre + "'.");
+            }
+    }
+
+    /**
+     * Verifica la llamada a una función en el código.
+     *
+     * @param nombreFuncion El nombre de la funcion.
+     * @param parametrosFuncion Los parametros enviados en la llamada.
+     * @param argumentosFuncion Los argumentos de la funcion a llamar.
+     */
+    public void verificarLlamadaFuncion(String nombreFuncion, List<String> parametrosFuncion, List<TipoDatos> argumentosFuncion) {
+        // Verificar que el número de parámetros y argumentos coincida
+        if (argumentosFuncion.size() != parametrosFuncion.size()) {
+            System.err.println("Error semántico: La función '" + nombreFuncion + "' debe recibir " + parametrosFuncion.size() +
+                    " argumentos, pero se le están enviando " + argumentosFuncion.size() + ".");
             return;
         }
-        TipoDatos tipoVariable = tablaSimbolos.obtenerTipo(nombre);
-        TipoDatos tipoValor = obtenerTipoExpresion(valor);
 
-        if (!tablaSimbolos.esTipoCompatible(tipoVariable, tipoValor)) {
-             System.err.println("Error semántico: Tipo incompatible en la asignación a la variable '" + nombre + "'.");
+        // Convertir los parámetros a tipos de datos
+        List<TipoDatos> tiposParametros = new ArrayList<>();
+        for (String parametro : parametrosFuncion) {
+            TipoDatos tipoParametro = obtenerTipoExpresion(new Symbol(-1, parametro));
+            if (tipoParametro == null) {
+                System.err.println("Error semántico: No se pudo determinar el tipo del parámetro '" + parametro + "'.");
+                return;
+            }
+            tiposParametros.add(tipoParametro);
+        }
+
+        // Verificar la compatibilidad de tipos entre parámetros y argumentos
+        for (int i = 0; i < argumentosFuncion.size(); i++) {
+            TipoDatos tipoParametro = tiposParametros.get(i);
+            TipoDatos tipoArgumento = argumentosFuncion.get(i);
+
+            if (!tipoParametro.equals(tipoArgumento)) {
+                System.err.println("Error semántico: La función '" + nombreFuncion + "' espera un parámetro de tipo " +
+                        tipoParametro + " en la posición " + (i + 1) + ", pero se proporcionó un argumento de tipo " +
+                        tipoArgumento + ".");
+                return;
+            }
         }
     }
 
@@ -58,23 +133,42 @@ parser code {:
      * @throws RuntimeException Si la asignación no es válida.
      */
     private void verificarAsignacionElementoArreglo(String nombreArreglo, Symbol indice, Symbol valor) {
+        // Obtener el símbolo del arreglo
+        Simbolo simboloArreglo = tablaSimbolos.searchByName(nombreArreglo);
+
+        if (simboloArreglo == null) {
+            System.err.println("Error semántico: El arreglo '" + nombreArreglo + "' no está declarado.");
+            return;
+        }
+
+        // Obtener el ámbito actual
+        String ambitoActual = tablaSimbolos.obtenerAmbitoActual();
+
+        // Verificar que la asignación ocurra dentro del mismo ámbito
+        if (!simboloArreglo.getAmbito().equals(ambitoActual)) {
+            System.err.println("Error semántico: No se puede modificar el arreglo '" + nombreArreglo + "' desde un ámbito diferente.");
+            return;
+        }
+
         // Verificar que el índice sea un entero
         if (!(indice.value instanceof Integer)) {
-            throw new RuntimeException("Error semántico: El índice del arreglo debe ser un entero.");
+            System.err.println("Error semántico: El índice del arreglo debe ser un entero.");
+            return;
         }
         int idx = (Integer) indice.value;
 
         // Verificar que el índice esté dentro de los límites del arreglo
-        if (idx < 0 || idx >= tablaSimbolos.searchByName(nombreArreglo).getArraySize()) {
-            throw new RuntimeException("Error semántico: Índice fuera de los límites para el arreglo '" + nombreArreglo + "'.");
+        if (idx < 0 || idx >= simboloArreglo.getArraySize()) {
+            System.err.println("Error semántico: Índice fuera de los límites para el arreglo '" + nombreArreglo + "'.");
+            return;
         }
 
         // Obtener el tipo del valor a asignar
         TipoDatos tipoValor = obtenerTipoExpresion(valor);
 
         // Verificar compatibilidad de tipos
-        if (!tablaSimbolos.esTipoCompatible(tablaSimbolos.obtenerTipo(nombreArreglo), tipoValor)) {
-            throw new RuntimeException("Error semántico: Tipo incompatible en la asignación al arreglo '" + nombreArreglo + "'.");
+        if (!analisisSemantico.esTipoCompatible(tablaSimbolos.obtenerTipo(nombreArreglo), tipoValor)) {
+            System.err.println("Error semántico: Tipo incompatible en la asignación al arreglo '" + nombreArreglo + "'.");
         }
     }
 
@@ -89,13 +183,15 @@ parser code {:
 
         // Verificar que el valor sea una lista de valores
         if (!(valor.value instanceof List)) {
-            throw new RuntimeException("Error semántico: Se esperaba una lista de valores para la asignación del arreglo.");
+            //throw new RuntimeException("Error semántico: Se esperaba una lista de valores para la asignación del arreglo.");
+            System.err.println("Error semántico: Se esperaba una lista de valores para la asignación del arreglo.");
         }
         List<Object> valores = (List<Object>) valor.value;
-        System.out.println("Valores: " + valores + " Tipo de variable: " + valores.getClass().getName());
+
         // Verificar que el tamaño de la lista coincida con el tamaño del arreglo
         if (valores.size() != tablaSimbolos.searchByName(nombreArreglo).getArraySize()) {
-            throw new RuntimeException("Error semántico: El tamaño de la lista no coincide con el tamaño del arreglo '" + nombreArreglo + "'.");
+            //throw new RuntimeException("Error semántico: El tamaño de la lista no coincide con el tamaño del arreglo '" + nombreArreglo + "'.");
+            System.err.println("Error semántico: Tipo incompatible en la asignación al arreglo '" + nombreArreglo + "'.");
         }
 
         // Verificar que todos los valores de la lista sean compatibles con el tipo del arreglo
@@ -104,13 +200,14 @@ parser code {:
         for (Object valorElemento : valores) {
             TipoDatos tipoElemento = obtenerTipoExpresion(new Symbol(-1, valorElemento));
 
-            if (!tablaSimbolos.esTipoCompatible(tipoArreglo, tipoElemento)) {
-                throw new RuntimeException("Error semántico: Tipo incompatible en la asignación al arreglo '" + nombreArreglo + "'.");
+            if (!analisisSemantico.esTipoCompatible(tipoArreglo, tipoElemento)) {
+                //throw new RuntimeException("Error semántico: Tipo incompatible en la asignación al arreglo '" + nombreArreglo + "'.");
+                System.err.println("Error semántico: Tipo incompatible en la asignación al arreglo '" + nombreArreglo + "'.");
             }
         }
     }
 
-
+    //Reporte de errores sintacticos
     @Override
     public void syntax_error(Symbol s) {
         System.err.println("Error sintáctico en línea " + (s.left) + ", columna " + (s.right));
@@ -125,7 +222,7 @@ parser code {:
 
     @Override
     public void unrecovered_syntax_error(Symbol s) throws Exception {
-        throw new RuntimeException("Error sintáctico crítico.");
+        System.err.println("Error sintáctico crítico.");
     }
 
 :};
@@ -141,7 +238,6 @@ terminal AND, OR, NOT;
 terminal IF, ELSE, WHILE, FOR, SWITCH, CASE, DEFAULT;
 terminal IDENTIFIER, MAIN, PRINT, READ, COLON, COMMA;
 terminal RETURN, BREAK;
-
 terminal Object INT_LITERAL, FLOAT_LITERAL, BOOL_LITERAL, STRING_LITERAL, CHAR_LITERAL;
 
 // Declaración de no terminales
@@ -153,10 +249,10 @@ non terminal ifElse, while, for, switch, casos, caso, io, operadorAritmetico, op
 non terminal operadorLogico, operadorUnario, termino;
 non terminal expressionLogica, expressionRelacional, expressionAritmetica, expressionUnaria;
 non terminal asignacionFor, llamadaFuncionCompleta, expressionCompleta;
-non terminal creacionAsignArreglo;
+non terminal creacionArreglo, creacionAsignArreglo;
 non terminal ifElseEncabezado, forEncabezado, whileEncabezado, switchEncabezado;
-non terminal openblock, closeblock;
-
+non terminal openblock, closeblock, encabezadoFor, encabezadoWhile, encabezadoIfElse;
+non terminal openSwitch, closeSwitch, encabezadoSwitch;
 non terminal TipoDatos tipos;
 non terminal Object creacionAsign, funcion, bloque, parametros;
 
@@ -177,15 +273,19 @@ start with program;
 // Reglas de producción
 program ::= main funciones {:
     tablaSimbolos.asignarAmbito();
+    analisisSemantico.iniciarAnalisisSemantico();
 :}
           | funciones main {:
     tablaSimbolos.asignarAmbito();
+    analisisSemantico.iniciarAnalisisSemantico();
 :}
           | funciones {:
     tablaSimbolos.asignarAmbito();
+    analisisSemantico.iniciarAnalisisSemantico();
 :}
           | main {:
     tablaSimbolos.asignarAmbito();
+    analisisSemantico.iniciarAnalisisSemantico();
 :}
           | error END_STATEMENT {:
                 System.err.println("Recuperación: Se ignoró el error hasta ';'");
@@ -199,7 +299,7 @@ funcion ::= encabezadoFunc: encabezado bloque: bloque {:
     tablaSimbolos.addToSymbolTable(encabezadoFuncion.tipo.toString(), "FUNCTION", encabezadoFuncion.nombre.toString(), null, -1);
 :};
 
-encabezadoFunc ::= tipos:tipo IDENTIFIER: nombre parametros: params {:
+encabezadoFunc ::= tipos: tipo IDENTIFIER: nombre parametros: params {:
     RESULT = new Funciones.EncabezadoFuncion(tipo, nombre.toString(), params);
 :};
 
@@ -248,12 +348,14 @@ sentencia ::= creacion
             | breakStatement
             | llamadaFuncionCompleta;
 
+
 creacion ::= tipos: tipo IDENTIFIER: nombre END_STATEMENT {:
     tablaSimbolos.addToSymbolTable(tipo.toString(), "VARIABLE", (String) nombre, null, -1);
 :};
 
 creacionAsign ::= tipos: tipo IDENTIFIER: nombre ASSIGN expression: valor END_STATEMENT {:
     tablaSimbolos.addToSymbolTable(tipo.toString(), "VARIABLE", (String) nombre, (Symbol) valor, -1);
+    verificarAsignacion(nombre.toString(), (Symbol) valor);
 :};
 
 asignacion ::= IDENTIFIER: nombre ASSIGN expression: valor END_STATEMENT {:
@@ -285,13 +387,15 @@ literales ::= INT_LITERAL:i {:
     RESULT = symbol;
 :};
 
-creacionAsignArreglo ::= tipos: tipo IDENTIFIER: nombre OPEN_BRACKET expression: size CLOSE_BRACKET END_STATEMENT {:
+creacionArreglo ::= tipos: tipo IDENTIFIER: nombre OPEN_BRACKET expression: size CLOSE_BRACKET END_STATEMENT {:
     int arraySize = (Integer) ((Symbol) size).value;
     tablaSimbolos.addToSymbolTable(tipo.toString(), "ARRAY", (String) nombre, null, arraySize);
-:}
-                       | tipos: tipo IDENTIFIER: nombre OPEN_BRACKET expression: size CLOSE_BRACKET ASSIGN bloque: valores END_STATEMENT {:
+:};
+
+creacionAsignArreglo ::= tipos: tipo IDENTIFIER: nombre OPEN_BRACKET expression: size CLOSE_BRACKET ASSIGN bloque: valores END_STATEMENT {:
     int arraySize = (Integer) ((Symbol) size).value;
     tablaSimbolos.addToSymbolTable(tipo.toString(), "ARRAY", (String) nombre, (Symbol) valores, arraySize);
+    verificarAsignacionArregloCompleto((String) nombre, (Symbol) valores);
 :};
 
 asignacionArreglo ::= IDENTIFIER: nombre OPEN_BRACKET expression: e1 CLOSE_BRACKET ASSIGN expression: e2 END_STATEMENT {:
@@ -312,10 +416,25 @@ returnStatement ::= RETURN expression: valor END_STATEMENT {:
     cont ++;
 :};
 
-breakStatement ::= BREAK END_STATEMENT;
+breakStatement ::= BREAK END_STATEMENT{:
+    tablaSimbolos.addToSymbolTable("VOID", "BREAK", "break" + cont, null, -1);
+    cont ++;
+:};
 
-llamadaFuncion ::= IDENTIFIER OPEN_PAREN argumentos CLOSE_PAREN
-                 | IDENTIFIER OPEN_PAREN CLOSE_PAREN;
+llamadaFuncion ::= IDENTIFIER: nombre OPEN_PAREN argumentos: a CLOSE_PAREN {:
+    List<String> tipoParametrosFuncion = tablaSimbolos.obtenerTipoParametrosFuncion(new Symbol(-1, nombre)).reversed();
+    List<Symbol> listaArgumentos = (List<Symbol>) ((Symbol) a).value;
+    List<TipoDatos> nuevaListaArgumentos = new ArrayList();
+
+    for (Object argumento: listaArgumentos) {
+        nuevaListaArgumentos.add(obtenerTipoExpresion(new Symbol(-1, argumento)));
+    }
+    verificarLlamadaFuncion((String) nombre, tipoParametrosFuncion, nuevaListaArgumentos);
+    RESULT = tablaSimbolos.obtenerTipoRetornoFuncion(new Symbol (-1, nombre));
+:}
+                 | IDENTIFIER: nombre OPEN_PAREN CLOSE_PAREN {:
+    RESULT = tablaSimbolos.obtenerTipoRetornoFuncion(new Symbol (-1, nombre));
+:};
 
 llamadaFuncionCompleta ::= llamadaFuncion END_STATEMENT;
 
@@ -335,14 +454,42 @@ estructuraControl ::= ifElse
                     | for
                     | switch;
 
-ifElse ::= IF OPEN_PAREN expression CLOSE_PAREN bloque ELSE bloque
-         | IF OPEN_PAREN expression CLOSE_PAREN bloque;
+ifElse ::= encabezadoIfElse bloque ELSE bloque
+         | encabezadoIfElse bloque;
 
-while ::= WHILE OPEN_PAREN expression CLOSE_PAREN bloque;
+encabezadoIfElse ::= IF OPEN_PAREN expression CLOSE_PAREN {:
+    tablaSimbolos.addToSymbolTable("UNDEFINED", "IF", "if" + cont, null, -1);
+    cont ++;
+:};
 
-for ::= FOR OPEN_PAREN asignacionFor COMMA expression COMMA expression CLOSE_PAREN bloque;
+while ::= encabezadoWhile bloque;
 
-switch ::= SWITCH OPEN_PAREN expression CLOSE_PAREN OPEN_BLOCK casos CLOSE_BLOCK;
+encabezadoWhile ::= WHILE OPEN_PAREN expression CLOSE_PAREN {:
+    tablaSimbolos.addToSymbolTable("UNDEFINED", "CYCLE", "while" + cont, null, -1);
+    cont ++;
+:};
+
+for ::= encabezadoFor bloque;
+
+encabezadoFor ::= FOR OPEN_PAREN asignacionFor COMMA expression COMMA expression CLOSE_PAREN {:
+    tablaSimbolos.addToSymbolTable("UNDEFINED", "CYCLE", "for" + cont, null, -1);
+    cont ++;
+:};
+
+switch ::= encabezadoSwitch openSwitch casos closeSwitch;
+
+encabezadoSwitch ::= SWITCH OPEN_PAREN expression CLOSE_PAREN {:
+    tablaSimbolos.addToSymbolTable("UNDEFINED", "SWITCH", "switch" + cont, null, -1);
+    cont ++;
+:};
+
+openSwitch ::= OPEN_BLOCK: o {:
+    tablaSimbolos.abrirScope(new Symbol(-1, o));
+:};
+
+closeSwitch ::= CLOSE_BLOCK: c {:
+    tablaSimbolos.cerrarScope(new Symbol(-1, c));
+:};
 
 casos ::= caso
         | casos caso;
@@ -374,7 +521,7 @@ expressionUnaria ::= termino: t {:RESULT = t;:}
 
 termino ::= IDENTIFIER: i {: RESULT = tablaSimbolos.obtenerValor(new Symbol (-1, i));:}
           | literales: l {:RESULT = l;:}
-          | llamadaFuncion
+          | llamadaFuncion: lf {: RESULT = lf; :}
           | accesoArreglo: aa {: RESULT = aa; :}
           | OPEN_PAREN expression: e CLOSE_PAREN {: RESULT = e; :};
 

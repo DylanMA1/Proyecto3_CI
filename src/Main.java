@@ -1,5 +1,6 @@
 import CUP.Parser;
 import Clases.TablaSimbolos;
+import Clases.Semantico;
 import Clases.TipoDatos;
 import Clases.Simbolo;
 import java_cup.runtime.Symbol;
@@ -102,7 +103,7 @@ public class Main {
             lexer.desactivarImpresionErrores();
             Parser parser = new Parser(lexer);
             parser.parse();
-            parser.tablaSimbolos.imprimirTabla(); // Esto ahora escribe en el archivo
+            parser.tablaSimbolos.escribirTabla();
             System.out.println("Análisis completado.");
         } catch (Exception e) {
             System.err.println("Error durante el análisis: " + e.getMessage());

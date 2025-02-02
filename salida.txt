@@ -1,9 +1,12 @@
 Token: FLOAT, Tipo: FLOAT, Línea: 10, Columna: 1
 Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 10, Columna: 10
 Token: OPEN_PAREN, Tipo: UNDEFINED, Línea: 10, Columna: 18
-Token: CHAR, Tipo: CHAR, Línea: 10, Columna: 29
-Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 10, Columna: 36
-Token: CLOSE_PAREN, Tipo: UNDEFINED, Línea: 10, Columna: 42
+Token: INTEGER, Tipo: INTEGER, Línea: 10, Columna: 29
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 10, Columna: 37
+Token: COMMA, Tipo: UNDEFINED, Línea: 10, Columna: 42
+Token: CHAR, Tipo: CHAR, Línea: 10, Columna: 44
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 10, Columna: 51
+Token: CLOSE_PAREN, Tipo: UNDEFINED, Línea: 10, Columna: 57
 Token: OPEN_BLOCK, Tipo: UNDEFINED, Línea: 11, Columna: 1
 Token: CHAR, Tipo: CHAR, Línea: 12, Columna: 5
 Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 12, Columna: 12
@@ -64,179 +67,139 @@ Token: INT_LITERAL, Tipo: UNDEFINED, Línea: 21, Columna: 82
 Token: AND, Tipo: UNDEFINED, Línea: 21, Columna: 85
 Token: BOOL_LITERAL, Tipo: UNDEFINED, Línea: 21, Columna: 93
 Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 21, Columna: 98
-Token: FOR, Tipo: UNDEFINED, Línea: 26, Columna: 5
-Token: OPEN_PAREN, Tipo: UNDEFINED, Línea: 26, Columna: 12
-Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 26, Columna: 23
-Token: ASSIGN, Tipo: UNDEFINED, Línea: 26, Columna: 27
-Token: INT_LITERAL, Tipo: UNDEFINED, Línea: 26, Columna: 35
-Token: COMMA, Tipo: UNDEFINED, Línea: 26, Columna: 38
-Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 26, Columna: 40
-Token: LESS_THAN, Tipo: UNDEFINED, Línea: 26, Columna: 44
-Token: INT_LITERAL, Tipo: UNDEFINED, Línea: 26, Columna: 53
-Token: MULTIPLY, Tipo: UNDEFINED, Línea: 26, Columna: 56
-Token: INT_LITERAL, Tipo: UNDEFINED, Línea: 26, Columna: 67
-Token: COMMA, Tipo: UNDEFINED, Línea: 26, Columna: 69
-Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 26, Columna: 71
-Token: INCREMENT, Tipo: UNDEFINED, Línea: 26, Columna: 75
-Token: CLOSE_PAREN, Tipo: UNDEFINED, Línea: 26, Columna: 81
-Token: OPEN_BLOCK, Tipo: UNDEFINED, Línea: 27, Columna: 5
-Token: FLOAT, Tipo: FLOAT, Línea: 29, Columna: 9
-Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 29, Columna: 18
-Token: ASSIGN, Tipo: UNDEFINED, Línea: 29, Columna: 25
-Token: FLOAT_LITERAL, Tipo: UNDEFINED, Línea: 29, Columna: 33
-Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 29, Columna: 38
-Token: INTEGER, Tipo: INTEGER, Línea: 30, Columna: 9
-Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 30, Columna: 17
-Token: ASSIGN, Tipo: UNDEFINED, Línea: 30, Columna: 22
-Token: INT_LITERAL, Tipo: UNDEFINED, Línea: 30, Columna: 30
-Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 30, Columna: 32
-Token: INTEGER, Tipo: INTEGER, Línea: 31, Columna: 9
-Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 31, Columna: 17
-Token: ASSIGN, Tipo: UNDEFINED, Línea: 31, Columna: 22
-Token: INT_LITERAL, Tipo: UNDEFINED, Línea: 31, Columna: 30
-Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 31, Columna: 32
-Token: IF, Tipo: UNDEFINED, Línea: 33, Columna: 9
-Token: OPEN_PAREN, Tipo: UNDEFINED, Línea: 33, Columna: 14
-Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 33, Columna: 25
-Token: EQUAL, Tipo: UNDEFINED, Línea: 33, Columna: 31
-Token: INT_LITERAL, Tipo: UNDEFINED, Línea: 33, Columna: 36
-Token: CLOSE_PAREN, Tipo: UNDEFINED, Línea: 33, Columna: 38
-Token: OPEN_BLOCK, Tipo: UNDEFINED, Línea: 34, Columna: 9
-Token: CHAR, Tipo: CHAR, Línea: 35, Columna: 13
-Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 35, Columna: 20
-Token: ASSIGN, Tipo: UNDEFINED, Línea: 35, Columna: 33
-Token: CHAR_LITERAL, Tipo: UNDEFINED, Línea: 35, Columna: 41
-Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 35, Columna: 45
-Token: CLOSE_BLOCK, Tipo: UNDEFINED, Línea: 36, Columna: 9
-Token: SWITCH, Tipo: UNDEFINED, Línea: 38, Columna: 9
-Token: OPEN_PAREN, Tipo: UNDEFINED, Línea: 38, Columna: 16
-Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 38, Columna: 27
-Token: CLOSE_PAREN, Tipo: UNDEFINED, Línea: 38, Columna: 32
-Token: OPEN_BLOCK, Tipo: UNDEFINED, Línea: 39, Columna: 9
-Token: CASE, Tipo: UNDEFINED, Línea: 40, Columna: 13
-Token: INT_LITERAL, Tipo: UNDEFINED, Línea: 40, Columna: 22
-Token: COLON, Tipo: UNDEFINED, Línea: 40, Columna: 24
-Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 40, Columna: 30
-Token: INCREMENT, Tipo: UNDEFINED, Línea: 40, Columna: 35
-Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 40, Columna: 41
-Token: CASE, Tipo: UNDEFINED, Línea: 41, Columna: 13
-Token: INT_LITERAL, Tipo: UNDEFINED, Línea: 41, Columna: 22
-Token: COLON, Tipo: UNDEFINED, Línea: 41, Columna: 24
-Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 41, Columna: 30
-Token: DECREMENT, Tipo: UNDEFINED, Línea: 41, Columna: 35
-Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 41, Columna: 42
-Token: DEFAULT, Tipo: UNDEFINED, Línea: 42, Columna: 13
-Token: COLON, Tipo: UNDEFINED, Línea: 42, Columna: 20
-Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 42, Columna: 26
-Token: LESS_EQUAL, Tipo: UNDEFINED, Línea: 42, Columna: 31
-Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 42, Columna: 41
-Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 42, Columna: 46
-Token: CLOSE_BLOCK, Tipo: UNDEFINED, Línea: 43, Columna: 9
-Token: CLOSE_BLOCK, Tipo: UNDEFINED, Línea: 44, Columna: 5
-Token: RETURN, Tipo: UNDEFINED, Línea: 45, Columna: 5
-Token: INT_LITERAL, Tipo: UNDEFINED, Línea: 45, Columna: 11
-Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 45, Columna: 13
-Token: CLOSE_BLOCK, Tipo: UNDEFINED, Línea: 46, Columna: 1
-Token: INTEGER, Tipo: INTEGER, Línea: 48, Columna: 1
-Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 48, Columna: 9
-Token: OPEN_PAREN, Tipo: UNDEFINED, Línea: 48, Columna: 19
-Token: INTEGER, Tipo: INTEGER, Línea: 48, Columna: 30
-Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 48, Columna: 38
-Token: CLOSE_PAREN, Tipo: UNDEFINED, Línea: 48, Columna: 43
-Token: OPEN_BLOCK, Tipo: UNDEFINED, Línea: 49, Columna: 1
-Token: INTEGER, Tipo: INTEGER, Línea: 50, Columna: 5
-Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 50, Columna: 13
-Token: ASSIGN, Tipo: UNDEFINED, Línea: 50, Columna: 20
-Token: INT_LITERAL, Tipo: UNDEFINED, Línea: 50, Columna: 28
-Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 50, Columna: 30
-Token: RETURN, Tipo: UNDEFINED, Línea: 51, Columna: 5
-Token: INT_LITERAL, Tipo: UNDEFINED, Línea: 51, Columna: 11
-Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 51, Columna: 13
-Token: CLOSE_BLOCK, Tipo: UNDEFINED, Línea: 52, Columna: 1
-Token: MAIN, Tipo: UNDEFINED, Línea: 54, Columna: 1
-Token: OPEN_PAREN, Tipo: UNDEFINED, Línea: 54, Columna: 10
-Token: CLOSE_PAREN, Tipo: UNDEFINED, Línea: 54, Columna: 21
-Token: OPEN_BLOCK, Tipo: UNDEFINED, Línea: 55, Columna: 1
-Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 60, Columna: 5
-Token: ASSIGN, Tipo: UNDEFINED, Línea: 60, Columna: 11
-Token: INT_LITERAL, Tipo: UNDEFINED, Línea: 60, Columna: 19
-Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 60, Columna: 21
+Token: FOR, Tipo: UNDEFINED, Línea: 23, Columna: 5
+Token: OPEN_PAREN, Tipo: UNDEFINED, Línea: 23, Columna: 12
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 23, Columna: 23
+Token: ASSIGN, Tipo: UNDEFINED, Línea: 23, Columna: 27
+Token: INT_LITERAL, Tipo: UNDEFINED, Línea: 23, Columna: 35
+Token: COMMA, Tipo: UNDEFINED, Línea: 23, Columna: 38
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 23, Columna: 40
+Token: LESS_THAN, Tipo: UNDEFINED, Línea: 23, Columna: 44
+Token: INT_LITERAL, Tipo: UNDEFINED, Línea: 23, Columna: 53
+Token: MULTIPLY, Tipo: UNDEFINED, Línea: 23, Columna: 56
+Token: INT_LITERAL, Tipo: UNDEFINED, Línea: 23, Columna: 67
+Token: COMMA, Tipo: UNDEFINED, Línea: 23, Columna: 69
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 23, Columna: 71
+Token: INCREMENT, Tipo: UNDEFINED, Línea: 23, Columna: 75
+Token: CLOSE_PAREN, Tipo: UNDEFINED, Línea: 23, Columna: 81
+Token: OPEN_BLOCK, Tipo: UNDEFINED, Línea: 24, Columna: 5
+Token: FLOAT, Tipo: FLOAT, Línea: 26, Columna: 9
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 26, Columna: 18
+Token: ASSIGN, Tipo: UNDEFINED, Línea: 26, Columna: 25
+Token: FLOAT_LITERAL, Tipo: UNDEFINED, Línea: 26, Columna: 33
+Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 26, Columna: 38
+Token: INTEGER, Tipo: INTEGER, Línea: 27, Columna: 9
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 27, Columna: 17
+Token: ASSIGN, Tipo: UNDEFINED, Línea: 27, Columna: 22
+Token: INT_LITERAL, Tipo: UNDEFINED, Línea: 27, Columna: 30
+Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 27, Columna: 32
+Token: INTEGER, Tipo: INTEGER, Línea: 28, Columna: 9
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 28, Columna: 17
+Token: ASSIGN, Tipo: UNDEFINED, Línea: 28, Columna: 22
+Token: INT_LITERAL, Tipo: UNDEFINED, Línea: 28, Columna: 30
+Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 28, Columna: 32
+Token: IF, Tipo: UNDEFINED, Línea: 30, Columna: 9
+Token: OPEN_PAREN, Tipo: UNDEFINED, Línea: 30, Columna: 14
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 30, Columna: 25
+Token: EQUAL, Tipo: UNDEFINED, Línea: 30, Columna: 31
+Token: INT_LITERAL, Tipo: UNDEFINED, Línea: 30, Columna: 36
+Token: CLOSE_PAREN, Tipo: UNDEFINED, Línea: 30, Columna: 38
+Token: OPEN_BLOCK, Tipo: UNDEFINED, Línea: 31, Columna: 9
+Token: CHAR, Tipo: CHAR, Línea: 32, Columna: 13
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 32, Columna: 20
+Token: ASSIGN, Tipo: UNDEFINED, Línea: 32, Columna: 33
+Token: CHAR_LITERAL, Tipo: UNDEFINED, Línea: 32, Columna: 41
+Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 32, Columna: 45
+Token: BREAK, Tipo: UNDEFINED, Línea: 33, Columna: 13
+Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 33, Columna: 19
+Token: CLOSE_BLOCK, Tipo: UNDEFINED, Línea: 34, Columna: 9
+Token: SWITCH, Tipo: UNDEFINED, Línea: 36, Columna: 9
+Token: OPEN_PAREN, Tipo: UNDEFINED, Línea: 36, Columna: 16
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 36, Columna: 27
+Token: CLOSE_PAREN, Tipo: UNDEFINED, Línea: 36, Columna: 32
+Token: OPEN_BLOCK, Tipo: UNDEFINED, Línea: 37, Columna: 9
+Token: CASE, Tipo: UNDEFINED, Línea: 38, Columna: 13
+Token: INT_LITERAL, Tipo: UNDEFINED, Línea: 38, Columna: 22
+Token: COLON, Tipo: UNDEFINED, Línea: 38, Columna: 24
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 38, Columna: 30
+Token: INCREMENT, Tipo: UNDEFINED, Línea: 38, Columna: 35
+Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 38, Columna: 41
+Token: CASE, Tipo: UNDEFINED, Línea: 39, Columna: 13
+Token: INT_LITERAL, Tipo: UNDEFINED, Línea: 39, Columna: 22
+Token: COLON, Tipo: UNDEFINED, Línea: 39, Columna: 24
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 39, Columna: 30
+Token: DECREMENT, Tipo: UNDEFINED, Línea: 39, Columna: 35
+Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 39, Columna: 42
+Token: DEFAULT, Tipo: UNDEFINED, Línea: 40, Columna: 13
+Token: COLON, Tipo: UNDEFINED, Línea: 40, Columna: 20
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 40, Columna: 26
+Token: LESS_EQUAL, Tipo: UNDEFINED, Línea: 40, Columna: 31
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 40, Columna: 41
+Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 40, Columna: 46
+Token: CLOSE_BLOCK, Tipo: UNDEFINED, Línea: 41, Columna: 9
+Token: CLOSE_BLOCK, Tipo: UNDEFINED, Línea: 42, Columna: 5
+Token: RETURN, Tipo: UNDEFINED, Línea: 44, Columna: 5
+Token: FLOAT_LITERAL, Tipo: UNDEFINED, Línea: 44, Columna: 11
+Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 44, Columna: 15
+Token: CLOSE_BLOCK, Tipo: UNDEFINED, Línea: 45, Columna: 1
+Token: INTEGER, Tipo: INTEGER, Línea: 47, Columna: 1
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 47, Columna: 9
+Token: OPEN_PAREN, Tipo: UNDEFINED, Línea: 47, Columna: 19
+Token: INTEGER, Tipo: INTEGER, Línea: 47, Columna: 30
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 47, Columna: 38
+Token: CLOSE_PAREN, Tipo: UNDEFINED, Línea: 47, Columna: 43
+Token: OPEN_BLOCK, Tipo: UNDEFINED, Línea: 48, Columna: 1
+Token: INTEGER, Tipo: INTEGER, Línea: 49, Columna: 5
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 49, Columna: 13
+Token: ASSIGN, Tipo: UNDEFINED, Línea: 49, Columna: 20
+Token: INT_LITERAL, Tipo: UNDEFINED, Línea: 49, Columna: 28
+Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 49, Columna: 30
+Token: RETURN, Tipo: UNDEFINED, Línea: 50, Columna: 5
+Token: INT_LITERAL, Tipo: UNDEFINED, Línea: 50, Columna: 11
+Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 50, Columna: 13
+Token: CLOSE_BLOCK, Tipo: UNDEFINED, Línea: 51, Columna: 1
+Token: MAIN, Tipo: UNDEFINED, Línea: 53, Columna: 1
+Token: OPEN_PAREN, Tipo: UNDEFINED, Línea: 53, Columna: 10
+Token: CLOSE_PAREN, Tipo: UNDEFINED, Línea: 53, Columna: 21
+Token: OPEN_BLOCK, Tipo: UNDEFINED, Línea: 54, Columna: 1
+Token: STRING, Tipo: STRING, Línea: 59, Columna: 5
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 59, Columna: 12
+Token: ASSIGN, Tipo: UNDEFINED, Línea: 59, Columna: 17
+Token: STRING_LITERAL, Tipo: UNDEFINED, Línea: 59, Columna: 25
+Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 59, Columna: 38
+Token: STRING, Tipo: STRING, Línea: 60, Columna: 5
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 60, Columna: 12
+Token: ASSIGN, Tipo: UNDEFINED, Línea: 60, Columna: 17
+Token: STRING_LITERAL, Tipo: UNDEFINED, Línea: 60, Columna: 25
+Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 60, Columna: 38
 Token: STRING, Tipo: STRING, Línea: 61, Columna: 5
 Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 61, Columna: 12
-Token: ASSIGN, Tipo: UNDEFINED, Línea: 61, Columna: 17
-Token: STRING_LITERAL, Tipo: UNDEFINED, Línea: 61, Columna: 25
-Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 61, Columna: 38
-Token: STRING, Tipo: STRING, Línea: 62, Columna: 5
+Token: ASSIGN, Tipo: UNDEFINED, Línea: 61, Columna: 18
+Token: STRING_LITERAL, Tipo: UNDEFINED, Línea: 61, Columna: 26
+Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 61, Columna: 42
+Token: CHAR, Tipo: CHAR, Línea: 62, Columna: 5
 Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 62, Columna: 12
-Token: ASSIGN, Tipo: UNDEFINED, Línea: 62, Columna: 17
-Token: STRING_LITERAL, Tipo: UNDEFINED, Línea: 62, Columna: 25
-Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 62, Columna: 38
-Token: STRING, Tipo: STRING, Línea: 63, Columna: 5
-Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 63, Columna: 12
-Token: ASSIGN, Tipo: UNDEFINED, Línea: 63, Columna: 18
-Token: STRING_LITERAL, Tipo: UNDEFINED, Línea: 63, Columna: 26
-Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 63, Columna: 42
-Token: READ, Tipo: UNDEFINED, Línea: 65, Columna: 5
-Token: OPEN_PAREN, Tipo: UNDEFINED, Línea: 65, Columna: 13
-Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 65, Columna: 24
-Token: CLOSE_PAREN, Tipo: UNDEFINED, Línea: 65, Columna: 29
-Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 65, Columna: 42
-Token: PRINT, Tipo: UNDEFINED, Línea: 67, Columna: 5
-Token: OPEN_PAREN, Tipo: UNDEFINED, Línea: 67, Columna: 11
-Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 67, Columna: 22
-Token: CLOSE_PAREN, Tipo: UNDEFINED, Línea: 67, Columna: 27
-Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 67, Columna: 40
-Token: RETURN, Tipo: UNDEFINED, Línea: 71, Columna: 5
-Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 71, Columna: 11
-Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 71, Columna: 17
-Token: CLOSE_BLOCK, Tipo: UNDEFINED, Línea: 73, Columna: 1
-Scope abierto. Nivel actual: 1
-Scope abierto. Nivel actual: 2
-Scope cerrado. Nivel actual: 1
-Scope abierto. Nivel actual: 2
-Scope abierto. Nivel actual: 3
-Scope cerrado. Nivel actual: 2
-Scope cerrado. Nivel actual: 1
-Scope cerrado. Nivel actual: 0
-Scope abierto. Nivel actual: 1
-Scope cerrado. Nivel actual: 0
-Scope abierto. Nivel actual: 1
-Scope cerrado. Nivel actual: 0
-------------------------------------------------------------------------------------------------------
-| _x22_           | PARAMETER                 | CHAR                      | null                                     | N/A        | 0          | _func1_    |
-| _miChar_        | VARIABLE                  | CHAR                      | !                                        | N/A        | 1          | _func1_    |
-| _str1_          | VARIABLE                  | STRING                    | Hola $%&/gaspar$& cierraregalo mundo     | N/A        | 1          | _func1_    |
-| _fl1_           | VARIABLE                  | FLOAT                     | 56.6                                     | N/A        | 1          | _func1_    |
-| _lit_           | VARIABLE                  | INTEGER                   | 2                                        | N/A        | 1          | _func1_    |
-| _arr_           | ARRAY                     | CHAR                      | [c, d]                                   | 2          | 1          | _func1_    |
-| -               | OPERADOR                  | OperadorAritmetico        | null                                     | N/A        | 1          | _func1_    |
-| _mibool_        | VARIABLE                  | BOOL                      | true                                     | N/A        | 1          | _func1_    |
-| *               | OPERADOR                  | OperadorAritmetico        | null                                     | N/A        | 1          | _func1_    |
-| ++              | OPERADOR                  | OperadorUnario            | null                                     | N/A        | 1          | _func1_    |
-| <               | OPERADOR                  | OperadorRelacional        | null                                     | N/A        | 1          | _func1_    |
-| &&              | OPERADOR                  | OperadorLogico            | null                                     | N/A        | 1          | _func1_    |
-| _i_             | VARIABLE                  | INTEGER                   | 10                                       | N/A        | 1          | _func1_    |
-| <               | OPERADOR                  | OperadorRelacional        | null                                     | N/A        | 1          | _func1_    |
-| *               | OPERADOR                  | OperadorAritmetico        | null                                     | N/A        | 1          | _func1_    |
-| ++              | OPERADOR                  | OperadorUnario            | null                                     | N/A        | 1          | _func1_    |
-| _var2_          | VARIABLE                  | FLOAT                     | 10.0                                     | N/A        | 2          | _func1_    |
-| _ch_            | VARIABLE                  | INTEGER                   | 2                                        | N/A        | 2          | _func1_    |
-| _id_            | VARIABLE                  | INTEGER                   | 1                                        | N/A        | 2          | _func1_    |
-| ==              | OPERADOR                  | OperadorRelacional        | null                                     | N/A        | 2          | _func1_    |
-| _miChar2222_    | VARIABLE                  | CHAR                      | a                                        | N/A        | 3          | _func1_    |
-| ++              | OPERADOR                  | OperadorUnario            | null                                     | N/A        | 2          | _func1_    |
-| --              | OPERADOR                  | OperadorUnario            | null                                     | N/A        | 2          | _func1_    |
-| <=              | OPERADOR                  | OperadorRelacional        | null                                     | N/A        | 2          | _func1_    |
-| return1         | RETURN                    | INTEGER                   | 1                                        | N/A        | 1          | _func1_    |
-| _func1_         | FUNCTION                  | FLOAT                     | null                                     | N/A        | 0          |            |
-| _x9_            | PARAMETER                 | INTEGER                   | null                                     | N/A        | 0          | _miFunc2_  |
-| _lit2_          | VARIABLE                  | INTEGER                   | 2                                        | N/A        | 1          | _miFunc2_  |
-| return2         | RETURN                    | INTEGER                   | 1                                        | N/A        | 1          | _miFunc2_  |
-| _miFunc2_       | FUNCTION                  | INTEGER                   | null                                     | N/A        | 0          |            |
-| _s1_            | VARIABLE                  | STRING                    | Hola mundo                               | N/A        | 1          | _verano_   |
-| _b1_            | VARIABLE                  | STRING                    | Lololololo                               | N/A        | 1          | _verano_   |
-| _bl1_           | VARIABLE                  | STRING                    | Lololololo222                            | N/A        | 1          | _verano_   |
-| return3         | RETURN                    | STRING                    | Lololololo222                            | N/A        | 1          | _verano_   |
-| _verano_        | FUNCTION                  | UNDEFINED                 | null                                     | N/A        | 0          |            |
---------------------------------------------------------------------------------------------------------
+Token: ASSIGN, Tipo: UNDEFINED, Línea: 62, Columna: 22
+Token: CHAR_LITERAL, Tipo: UNDEFINED, Línea: 62, Columna: 30
+Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 62, Columna: 34
+Token: READ, Tipo: UNDEFINED, Línea: 64, Columna: 5
+Token: OPEN_PAREN, Tipo: UNDEFINED, Línea: 64, Columna: 13
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 64, Columna: 24
+Token: CLOSE_PAREN, Tipo: UNDEFINED, Línea: 64, Columna: 29
+Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 64, Columna: 42
+Token: PRINT, Tipo: UNDEFINED, Línea: 66, Columna: 5
+Token: OPEN_PAREN, Tipo: UNDEFINED, Línea: 66, Columna: 11
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 66, Columna: 22
+Token: CLOSE_PAREN, Tipo: UNDEFINED, Línea: 66, Columna: 27
+Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 66, Columna: 40
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 68, Columna: 5
+Token: OPEN_PAREN, Tipo: UNDEFINED, Línea: 68, Columna: 13
+Token: IDENTIFIER, Tipo: IDENTIFIER, Línea: 68, Columna: 24
+Token: OPEN_PAREN, Tipo: UNDEFINED, Línea: 68, Columna: 34
+Token: CLOSE_PAREN, Tipo: UNDEFINED, Línea: 68, Columna: 45
+Token: COMMA, Tipo: UNDEFINED, Línea: 68, Columna: 57
+Token: CHAR_LITERAL, Tipo: UNDEFINED, Línea: 68, Columna: 59
+Token: CLOSE_PAREN, Tipo: UNDEFINED, Línea: 68, Columna: 63
+Token: END_STATEMENT, Tipo: UNDEFINED, Línea: 68, Columna: 76
+Token: CLOSE_BLOCK, Tipo: UNDEFINED, Línea: 70, Columna: 1
 Análisis completado.

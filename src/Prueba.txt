@@ -7,7 +7,7 @@ _/
 esto es un comentario inicial
 _/
 
-bromista _func1_ abreregalo cupido _x22_ cierraregalo
+bromista _func1_ abreregalo rodolfo _x21_, cupido _x22_ cierraregalo
 abrecuento
     cupido _miChar_ entrega '!' finregalo
     cometa _str1_ entrega "Hola $%&/gaspar$& cierraregalo mundo" finregalo
@@ -30,6 +30,7 @@ abrecuento
         elfo abreregalo _fl1_ mary 1 cierraregalo
         abrecuento
             cupido _miChar2222_ entrega 'a' finregalo
+            corta finregalo
         cierracuento
 
         varios abreregalo _ch_ cierraregalo
@@ -39,7 +40,8 @@ abrecuento
             ultimo sigue _id_ evergreen _id_ finregalo
         cierracuento
     cierracuento
-    envia 1 finregalo
+
+    envia 1.0 finregalo
 cierracuento
 
 rodolfo _miFunc2_ abreregalo rodolfo _x9_ cierraregalo
@@ -54,17 +56,15 @@ abrecuento
     \_
     Comentario 1
     _/
-    _lit_ entrega 2 finregalo
     cometa _s1_ entrega "Hola mundo" finregalo
     cometa _b1_ entrega "Lololololo" finregalo
     cometa _bl1_ entrega "Lololololo222" finregalo
+    cupido _miChar2_ entrega '!' finregalo
 
     escucha abreregalo _s1_ cierraregalo finregalo
 
     narra abreregalo _b1_ cierraregalo finregalo
 
-    # _miFunc_ abreregalo _miFunc2_ abreregalo cierraregalo ,'a' cierraregalo finregalo
-
-    envia _bl1_ finregalo
+    _func1_ abreregalo _miFunc2_ abreregalo cierraregalo, 'f' cierraregalo finregalo
 
 cierracuento
